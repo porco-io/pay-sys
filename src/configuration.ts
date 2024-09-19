@@ -10,13 +10,15 @@ if (!EnvUtil.isTest) {
   console.log(config.parsed);
 }
 
-import { Configuration, App, type IMidwayContainer, Config } from '@midwayjs/core';
+import { Configuration, App, type IMidwayContainer, Config, Logger, Inject } from '@midwayjs/core';
 
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
-// import { DefaultErrorFilter } from './filter/default.filter.js';
-// import { NotFoundFilter } from './filter/notfound.filter.js';
+import rabbitmq from '@midwayjs/rabbitmq';
+import * as jwt from '@midwayjs/jwt';
+import * as i18n from '@midwayjs/i18n';
+import * as swagger from '@midwayjs/swagger';
 import { ReportMiddleware } from './middleware/report.middleware.js';
 import * as sequelize from '@midwayjs/sequelize';
 import * as redis from '@midwayjs/redis';
@@ -28,6 +30,13 @@ import { Sequelize } from 'sequelize-typescript';
     sequelize,
     redis,
     validate,
+    jwt,
+    i18n,
+    swagger,
+    {
+      component: rabbitmq,
+      enabledEnvironment: ['local', 'dev', 'development', 'production'],
+    },
     {
       component: info,
       enabledEnvironment: ['local'],
@@ -39,14 +48,14 @@ export class MainConfiguration {
   @App('koa')
   app: koa.Application;
 
-
   @sequelize.InjectDataSource()
   dataSource: Sequelize;
 
   async onReady(container: IMidwayContainer) {
-    // add middleware
     this.app.useMiddleware([ReportMiddleware]);
-    // add filter
-    // this.app.useFilter([NotFoundFilter, DefaultErrorFilter]);
   }
+
+  async onStop(container: IMidwayContainer) {
+  }
+
 }

@@ -1,6 +1,13 @@
-import { type MidwayConfig } from '@midwayjs/core';
+import { MidwayConfig } from '@midwayjs/core';
+import { LoggerInfo, LoggerOptions } from '@midwayjs/logger';
 
-export default () => ({
+
+const logFormat = (info: LoggerInfo) => {
+  return `${info.timestamp} ${info.LEVEL} [midway:mq] ${info.message}`;
+};
+
+export default () => { 
+  return ({
   // use for cookie sign key, should change to your own and keep security
   keys: '1726669907781_3034',
   koa: {
@@ -14,11 +21,41 @@ export default () => ({
       stripUnknown: true
     }
   },
+  midwayLogger: {
+    clients: {
+      coreLogger: {
+        format: logFormat,
+      },
+      appLogger: {
+        format: logFormat,
+      },
+      mqLogger: {
+        level: 'info',
+        aliasName: 'mqLogger',
+        format: logFormat,
+        transports: {
+          console: {
+            level: 'info'
+          },
+          file: {
+            fileLogName: 'mq.log',
+            level: 'info',
+          },
+        },
+      }
+    },
+    // } as Record<string, LoggerOptions> ,
+    default: {
+    },
+  },
   redis: {
     client: {
       port: 6379, // Redis port
       host: "127.0.0.1", // Redis host
     },
+  },
+  rabbitmq: {
+    url: process.env.MQ_HOST || 'amqp://localhost',
   },
   sequelize: {
     dataSource: {
@@ -52,4 +89,4 @@ export default () => ({
       },
     },
   },
-} as MidwayConfig);
+} as MidwayConfig)};

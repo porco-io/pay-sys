@@ -6,20 +6,26 @@
   "dependencies": {
     "@midwayjs/bootstrap": "^3.17.1",
     "@midwayjs/core": "^3.17.1",
+    "@midwayjs/i18n": "^3.17.3",
     "@midwayjs/info": "^3.17.3",
+    "@midwayjs/jwt": "^3.17.3",
     "@midwayjs/koa": "^3.17.1",
     "@midwayjs/logger": "^3.4.2",
+    "@midwayjs/rabbitmq": "^3.17.1",
     "@midwayjs/redis": "^3.17.1",
     "@midwayjs/sequelize": "^3.17.1",
     "@midwayjs/swagger": "^3.17.3",
     "@midwayjs/validate": "^3.17.3",
     "@types/node": "^16.18.97",
+    "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.4",
     "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
+    "log4js": "^6.9.1",
     "pg": "^8.13.0",
     "sequelize": "^6.37.3",
-    "sequelize-typescript": "^2.1.6"
+    "sequelize-typescript": "^2.1.6",
+    "swagger-ui-dist": "^5.17.14"
   },
   "devDependencies": {
     "@midwayjs/mock": "^3.17.1",

@@ -1,6 +1,0 @@
-2024-09-19 14:09:29.831 ERROR 53662 [midway:redis] Redis quit failed. Error: Connection is closed.
-    at close (/Users/zack/projects/porco-io/pay-sys/node_modules/.pnpm/ioredis@5.4.1/node_modules/ioredis/built/redis/event_handler.js:189:25)
-    at Socket.<anonymous> (/Users/zack/projects/porco-io/pay-sys/node_modules/.pnpm/ioredis@5.4.1/node_modules/ioredis/built/redis/event_handler.js:156:20)
-    at Object.onceWrapper (node:events:634:26)
-    at Socket.emit (node:events:519:28)
-    at TCP.<anonymous> (node:net:339:12)
