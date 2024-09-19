@@ -1,0 +1,36 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowUnreachableCode": true,
+    "noUnusedParameters": false,
+    "inlineSourceMap":true,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
+    "importHelpers": true,
+    "stripInternal": true,
+    "skipLibCheck": true,
+    "pretty": true,
+    "declaration": true,
+    "incremental": false,
+    "composite": false,
+    "resolveJsonModule": true,
+    // "baseUrl": "./",
+    // "paths": {
+    //   "@/*": ["./src/*"]
+    // },
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": [ "./src/typings", "./node_modules/@types"],
+    "outDir": "dist"
+  },
+  "exclude": [
+    "dist",
+    "node_modules"
+  ],
+  "include": ["src/**/*.ts"]
+}

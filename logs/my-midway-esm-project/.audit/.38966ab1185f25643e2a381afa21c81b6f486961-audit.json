@@ -1,0 +1,15 @@
+{
+  "keep": {
+    "days": true,
+    "amount": 7
+  },
+  "auditLog": "/Users/zack/projects/porco-io/pay-sys/logs/my-midway-esm-project/.audit/.38966ab1185f25643e2a381afa21c81b6f486961-audit.json",
+  "files": [
+    {
+      "date": 1726719638736,
+      "name": "/Users/zack/projects/porco-io/pay-sys/logs/my-midway-esm-project/midway-app.log.2024-09-19",
+      "hash": "7dd3a244f484a11be0071743fee4d6e2"
+    }
+  ],
+  "hashType": "md5"
+}

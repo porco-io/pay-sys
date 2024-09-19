@@ -1,0 +1,12 @@
+2024-09-19 14:07:00.529 INFO 53467 [midway:sequelize] client created: default
+2024-09-19 14:07:14.211 INFO 53483 [midway:sequelize] client created: default
+2024-09-19 14:07:53.155 INFO 53528 [midway:sequelize] client created: default
+2024-09-19 14:09:17.080 INFO 53662 [midway:sequelize] client created: default
+2024-09-19 14:09:17.081 INFO 53662 [midway:redis] server connecting redis://:***@127.0.0.1:6379
+2024-09-19 14:09:17.082 INFO 53662 [midway:redis] client connect success
+2024-09-19 14:09:29.827 ERROR 53662 [midway:redis] Redis quit failed. Error: Connection is closed.
+    at close (/Users/zack/projects/porco-io/pay-sys/node_modules/.pnpm/ioredis@5.4.1/node_modules/ioredis/built/redis/event_handler.js:189:25)
+    at Socket.<anonymous> (/Users/zack/projects/porco-io/pay-sys/node_modules/.pnpm/ioredis@5.4.1/node_modules/ioredis/built/redis/event_handler.js:156:20)
+    at Object.onceWrapper (node:events:634:26)
+    at Socket.emit (node:events:519:28)
+    at TCP.<anonymous> (node:net:339:12)
