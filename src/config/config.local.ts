@@ -6,11 +6,18 @@ export default () => ({
   koa: {
     port: Number(process.env.SERVER_PORT),
   },
+  cors: {
+    origin: '*',
+  },
   sequelize: {
     dataSource: {
       // 第一个数据源，数据源的名字可以完全自定义
       default: {
         sync: true,
+        syncOptions: {
+          force: false,
+          alter: true,
+        }
       },
     },
   },

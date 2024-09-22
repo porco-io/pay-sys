@@ -4,6 +4,11 @@ import { Controller, Get } from '@midwayjs/core';
 export class HomeController {
   @Get('/')
   async home(): Promise<string> {
-    return 'Hello Midwayjs!';
+    return 'Hipo pay service';
+  }
+
+  @Get('/status.ok')
+  async statusOK(): Promise<string> {
+    return 'ok';
   }
 }

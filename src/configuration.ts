@@ -3,6 +3,7 @@ import { join } from 'path';
 import appRootPath from 'app-root-path';
 import { EnvUtil } from './utils/env';
 
+console.log(process.env.NODE_ENV)
 const config = dotenv.config({
   path: join(appRootPath.path, `env/.env.${process.env.NODE_ENV || 'production'}`),
 });
@@ -22,11 +23,18 @@ import * as swagger from '@midwayjs/swagger';
 import { ReportMiddleware } from './middleware/report.middleware.js';
 import * as sequelize from '@midwayjs/sequelize';
 import * as redis from '@midwayjs/redis';
+import * as crossDomain from '@midwayjs/cross-domain';
+
 import { Sequelize } from 'sequelize-typescript';
+import { initAdminUser } from './models/setup';
+import { ErrorMiddleware } from './middleware/error.middleware';
+import { ResponseMiddleware } from './middleware/response.middleware';
+import { AuthMiddleware } from './middleware/auth.middleware';
 
 @Configuration({
   imports: [
     koa,
+    crossDomain,
     sequelize,
     redis,
     validate,
@@ -52,7 +60,18 @@ export class MainConfiguration {
   dataSource: Sequelize;
 
   async onReady(container: IMidwayContainer) {
-    this.app.useMiddleware([ReportMiddleware]);
+    await initAdminUser(this.dataSource);
+
+    this.app.useMiddleware([
+      ReportMiddleware,
+      ErrorMiddleware,
+      ResponseMiddleware,
+      AuthMiddleware,
+    ]);
+    // const users = await this.dataSource.models.User.findAll({
+    //   logging: console.log,
+    // });
+    // console.log('users', users);
   }
 
   async onStop(container: IMidwayContainer) {

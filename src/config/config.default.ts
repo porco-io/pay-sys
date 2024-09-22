@@ -10,6 +10,14 @@ export default () => {
   return ({
   // use for cookie sign key, should change to your own and keep security
   keys: '1726669907781_3034',
+  jwt: {
+    secret: '0fec3b24-04db-466f-a518-eae6c1d3f451', // fs.readFileSync('xxxxx.key')
+    sign: {
+      // signOptions
+      expiresIn: '7d', // https://github.com/vercel/ms
+      noTimestamp: true,
+    },
+  },
   koa: {
     port: Number(process.env.SERVER_PORT),
   },
