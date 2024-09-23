@@ -1,4 +1,4 @@
-import { isArray, isNil, isString, isUndefined } from 'lodash';
+import { isArray, isNil, isString, isUndefined, omitBy } from 'lodash';
 import { FindOptions, ScopeOptions, Op, ModelScopeOptions } from 'sequelize';
 import { Model } from 'sequelize-typescript';
 
@@ -15,6 +15,7 @@ export enum ScopeType {
   in = 'in',
   order = 'order',
   custom = 'custom',
+  arrayContains = 'arrayContains',
 }
 
 type ScopeFindOption<T = any> = (value: T) => FindOptions<Model> | null;
@@ -28,6 +29,7 @@ type ScopeTypeHandlers = {
   [ScopeType.lt]: ScopeFindOption<number>;
   [ScopeType.lte]: ScopeFindOption<number>;
   [ScopeType.contains]: ScopeFindOption<string>;
+  [ScopeType.arrayContains]: ScopeFindOption<string | number |  (string | number)[] | undefined>;
   [ScopeType.in]: ScopeFindOption<any[]>;
   [ScopeType.attrs]: ScopeFindOption<string[]>;
   [ScopeType.order]: ScopeFindOption<string[]| string>;
@@ -150,6 +152,21 @@ const scopeHandlers: {
       where: {
         [prop]: {
           [Op.in]: value,
+        },
+      },
+    };
+  },
+  [ScopeType.arrayContains]: prop => value => {
+    if (isNil(value)) return {};
+    if (!isArray(value)) {
+      value = [value]
+    };
+    value = value.filter(e => !isNil(e));
+    if (!value.length) return {};
+    return {
+      where: {
+        [prop]: {
+          [Op.contains]: value,
         },
       },
     };

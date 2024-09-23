@@ -15,3 +15,13 @@ export enum AuditState {
   pass = 'pass',
   reject = 'reject',
 }
+
+export enum PaymentPlatform {
+  wechat = 'wechat',
+  alipay = 'alipay',
+}
+
+export const paymentPlatformCn = {
+  [PaymentPlatform.wechat]: '微信',
+  [PaymentPlatform.alipay]: '支付宝',
+}

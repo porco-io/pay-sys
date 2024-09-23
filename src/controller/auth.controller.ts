@@ -4,7 +4,7 @@ import { UserService } from '../service/user.service';
 import { SigninDTO, SignupDTO } from '../dto/auth.dto';
 
 @Controller('/api/auth')
-export class AdminAuthController {
+export class AuthController {
   @Inject()
   ctx: Context;
 
