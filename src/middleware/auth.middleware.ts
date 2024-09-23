@@ -25,8 +25,6 @@ export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
               const payload = this.jwtService.decodeSync(token) as IStruct.UserCache;
               if (payload.jti === JwtKeyid.user) {
                 ctx.state.user = await this.authUser(token)
-              } else if (payload.jti === JwtKeyid.user) {
-                ctx.state.adminUser = await this.authUser(token)
               }
             } catch(err) {
               if (err.name !== 'TokenExpiredError') {
