@@ -35,7 +35,7 @@ export class Payment extends Model<Payment> {
   id: number
 
   @Column({
-    type: DataType.ARRAY,
+    type: DataType.ARRAY(DataType.STRING),
     defaultValue: () => ([])
   })
   @ApiProperty({ description: '允许使用该支付的appId列表'})

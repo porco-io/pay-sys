@@ -9,44 +9,44 @@ importers:
   .:
     dependencies:
       '@midwayjs/bootstrap':
-        specifier: ^3.17.1
-        version: 3.17.1
+        specifier: ^3.18.0
+        version: 3.18.0
       '@midwayjs/core':
-        specifier: ^3.17.1
-        version: 3.17.1
+        specifier: ^3.18.0
+        version: 3.18.0
       '@midwayjs/cross-domain':
         specifier: ^3.18.0
         version: 3.18.0
       '@midwayjs/i18n':
-        specifier: ^3.17.3
-        version: 3.17.3
+        specifier: ^3.18.0
+        version: 3.18.0
       '@midwayjs/info':
-        specifier: ^3.17.3
-        version: 3.17.3
+        specifier: ^3.18.0
+        version: 3.18.0
       '@midwayjs/jwt':
-        specifier: ^3.17.3
-        version: 3.17.3
+        specifier: ^3.18.0
+        version: 3.18.0
       '@midwayjs/koa':
-        specifier: ^3.17.1
-        version: 3.17.1
+        specifier: ^3.18.0
+        version: 3.18.0
       '@midwayjs/logger':
         specifier: ^3.4.2
         version: 3.4.2
       '@midwayjs/rabbitmq':
-        specifier: ^3.17.1
-        version: 3.17.1(@types/amqplib@0.10.5)(amqplib@0.10.4)
+        specifier: ^3.18.0
+        version: 3.18.0(@types/amqplib@0.10.5)(amqplib@0.10.4)
       '@midwayjs/redis':
-        specifier: ^3.17.1
-        version: 3.17.1
+        specifier: ^3.18.0
+        version: 3.18.0
       '@midwayjs/sequelize':
-        specifier: ^3.17.1
-        version: 3.17.1
+        specifier: ^3.18.0
+        version: 3.18.0
       '@midwayjs/swagger':
-        specifier: ^3.17.3
-        version: 3.17.3
+        specifier: ^3.18.1
+        version: 3.18.1
       '@midwayjs/validate':
-        specifier: ^3.17.3
-        version: 3.17.3
+        specifier: ^3.18.0
+        version: 3.18.0
       '@types/node':
         specifier: ^16.18.97
         version: 16.18.108
@@ -59,18 +59,39 @@ importers:
       ansi-colors:
         specifier: ^4.1.3
         version: 4.1.3
+      axios:
+        specifier: ^1.7.7
+        version: 1.7.7
+      crypto-js:
+        specifier: ^4.2.0
+        version: 4.2.0
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
+      form-data:
+        specifier: ^4.0.0
+        version: 4.0.0
+      jsrsasign:
+        specifier: ^11.1.0
+        version: 11.1.0
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
       log4js:
         specifier: ^6.9.1
         version: 6.9.1
+      mime:
+        specifier: ^3.0.0
+        version: 3.0.0
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
       pg:
         specifier: ^8.13.0
         version: 8.13.0
+      random-string:
+        specifier: ^0.2.0
+        version: 0.2.0
       sequelize:
         specifier: ^6.37.3
         version: 6.37.3(pg@8.13.0)
@@ -85,17 +106,23 @@ importers:
         version: 10.0.0
     devDependencies:
       '@midwayjs/mock':
-        specifier: ^3.17.1
-        version: 3.17.1
+        specifier: ^3.18.0
+        version: 3.18.0
       '@types/amqplib':
         specifier: ^0.10.5
         version: 0.10.5
+      '@types/crypto-js':
+        specifier: ^4.2.2
+        version: 4.2.2
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.7
       '@types/mocha':
         specifier: ^10.0.8
         version: 10.0.8
+      '@types/random-string':
+        specifier: ^0.2.0
+        version: 0.2.0
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -461,20 +488,20 @@ packages:
     resolution: {integrity: sha512-sYcHglGKTxGF+hQ6x67xDfkE9o+NhVlRHBqq6gLywaMc6CojK/5vFZByphdonKinYlMLkEkacm+HEse9HzwgTA==}
     engines: {node: '>= 12'}
 
-  '@midwayjs/async-hooks-context-manager@3.17.1':
-    resolution: {integrity: sha512-raKSYisrMpF4lwd4dTkK46E140ObFzlvjTJBfociPROGf+QrwlyXz8QFQdx1IoUO9XPqPiFoNPEj/BEe6tttHw==}
+  '@midwayjs/async-hooks-context-manager@3.18.0':
+    resolution: {integrity: sha512-mZ9VyCKlX5oR5L9G0/Jsoex+LOIpqg2gsHrr6iYRMirMaRD3S5pHDvWhSrpHPuLqyoxsAHBdszSTkpWaQAy2rg==}
     engines: {node: '>=12.17.0'}
 
-  '@midwayjs/bootstrap@3.17.1':
-    resolution: {integrity: sha512-HlBpWtmINUoZzgiYzIqUlXUbqECZCWr7obA49SkUggHXD4HYTz2TZKJmDEvEjcoRueTIfa0Y+0mjFY/wnqAMgw==}
+  '@midwayjs/bootstrap@3.18.0':
+    resolution: {integrity: sha512-6DVowwvYIJUy14Zbieg2BrYOqnTASdOG5SsDRNLDob0XFbCgjTA43CwfJXvu3SBAlgRy7Osc8ggD8mXNAsC+cw==}
     engines: {node: '>=12.11.0'}
 
   '@midwayjs/cookies@1.2.0':
     resolution: {integrity: sha512-gdfAXk3+uL+9qcNo9lNnUFJCUGXXxCitBjyz9QJR08dcZ11mqTbxVNXhea525e3ZwKREy6f4PHAWofFwlPOZzQ==}
     engines: {node: '>=10'}
 
-  '@midwayjs/core@3.17.1':
-    resolution: {integrity: sha512-kdUeX7/BjgP88Q1ry/80kqW8BG75OwJfmOqgTgVvYI/YIl56W5FlPXwOWYWGEYEfTRuE/8Oupk5fWmLEEmhLmw==}
+  '@midwayjs/core@3.18.0':
+    resolution: {integrity: sha512-zvA5wC9XpnYwe3N06jEcmrMU3IIipyy6FIy5GMER43iYCTZa/J81tfMr7KttDTaW/FF9thx/jJNPqBiUiF6udQ==}
     engines: {node: '>=12'}
 
   '@midwayjs/cross-domain@3.18.0':
@@ -488,54 +515,54 @@ packages:
   '@midwayjs/glob@1.1.1':
     resolution: {integrity: sha512-xoNU+JdCxE214KQrB0qgs88+Da7KYVICeuTL9VeKwaxZXj6a/PbpmEaH4+5BHLvZRRe78tHGR19+nKZrmMHBJg==}
 
-  '@midwayjs/i18n@3.17.3':
-    resolution: {integrity: sha512-NpO9LZoaDT4ngScugBWXY4hlf4xgSyLc3z5CYzlYvLzol+nvO50FsA0jhKXRkezOxeVFebWNMyWzuizFBJv1Eg==}
+  '@midwayjs/i18n@3.18.0':
+    resolution: {integrity: sha512-ZFMM0kwSk4jh0gLKYgv/473k0TRx8CXlLaCYeg2uRaxM0z3sQdDJdThyqHrpqNZ9JH5KuDAt9L678knFFppZFw==}
     engines: {node: '>=12'}
 
-  '@midwayjs/info@3.17.3':
-    resolution: {integrity: sha512-4i/8SGY4tazVhyRFy0PnR2M2fMf2nmoKs8R8P5GHTGY14zhbR1rY2UqZxlGF2NXksCOkzoNnBqEnt7g42kSjVQ==}
+  '@midwayjs/info@3.18.0':
+    resolution: {integrity: sha512-TE2ezqMalQ7GlnNMYDwy7YAQz6iDkxDRiIEq3YIhk5FGGpLLkb0T3ic4VkYDZ7mVwMZ6m6ZV4WgylJUZpRHzwQ==}
     engines: {node: '>=12'}
 
-  '@midwayjs/jwt@3.17.3':
-    resolution: {integrity: sha512-rSf2V28AagJSTcJalxNm2IEFdyIQGF/pfaxpEvpRgae7zYApYLzp7tWh4etwZ6iQSGd9XWc/yitNIINxk+XNyQ==}
+  '@midwayjs/jwt@3.18.0':
+    resolution: {integrity: sha512-I7cHncZIf124zbrF3cG/aQrQrHygqnozx6GVgLz+5ZWtXcJ8sqwuR+flFnSK5fpeh2+H4u6Ck4PAEvHOSZoFHg==}
     engines: {node: '>=12'}
 
-  '@midwayjs/koa@3.17.1':
-    resolution: {integrity: sha512-rFPYNcPBOJmpDrCo+hUditAFEnpgCdiIgUJuKWtIV7YFRiPqgrUG+QTMhx4d9UPXEgPZMM0tkybcbOuHovX4jQ==}
+  '@midwayjs/koa@3.18.0':
+    resolution: {integrity: sha512-Jns7hWB2Y1VlhRlPhApy63lb2jivbI9Ee9Gh/xS6DelFx719S5mxwzRNTdjmRw0p5SDaGmwHRyKp/7FX3gdCKQ==}
     engines: {node: '>=12'}
 
   '@midwayjs/logger@3.4.2':
     resolution: {integrity: sha512-BxSdSMog4jxeqpHwgauuKZT6iAiu/Vr1HDjO9l81iqU+l8c9veAJVeLT08nTqKdjUiQXnxTaW6nYlvnzF2HdMA==}
     engines: {node: '>=10'}
 
-  '@midwayjs/mock@3.17.1':
-    resolution: {integrity: sha512-ZPZdbsgKZnLQ8jmO7/JfhgrphRXCDkzXWOCJy2vAYHU4ryR7HLOwkzVLH1W9xCeEH9L42GkzemuyzvT6UQyY7Q==}
+  '@midwayjs/mock@3.18.0':
+    resolution: {integrity: sha512-50lbph1H/QZUROoo37CQB6q9UpkXh6rjR0nZg23wuQBcKeghI6CARgPN5fkwfwIs6QQeMa/DY9krMHYWTxRUqw==}
     engines: {node: '>=12'}
 
-  '@midwayjs/rabbitmq@3.17.1':
-    resolution: {integrity: sha512-aBxfie3Hse8KGsKDh6LmNxgi5rjHKqs2Ul05BImKdz00Av9mKGcWoqcFrUPu4LUkzaV0GE+2hWkBVgKGDzeTcw==}
+  '@midwayjs/rabbitmq@3.18.0':
+    resolution: {integrity: sha512-NU1pwjVzG3Uvgmz2Vv5mkmSo6rqpnnpN3nopDgCEQHYdTSX1cEWJV2JpszP1z19cNIfrgutv+UI/XDzON1SJEQ==}
     engines: {node: '>=12'}
     peerDependencies:
       '@types/amqplib': '*'
       amqplib: '*'
 
-  '@midwayjs/redis@3.17.1':
-    resolution: {integrity: sha512-e/QHV6NiQz23LJaM4VYhvEVYjF+MrOBwaaIZwGHnBxJhaIn9NpEEBbQ13LE4nMpKa0eZ2/h/Mt1GFTYgZ/4E7Q==}
+  '@midwayjs/redis@3.18.0':
+    resolution: {integrity: sha512-OzFUc8wX1xdl2U/RqlX1jECGELmI/mW6H+JM4hy+JCV9P3YBMEsLA+n07Rh2Lm0qDtRisKR/gJ/Nt2I8YnhmwQ==}
     engines: {node: '>=12'}
 
-  '@midwayjs/sequelize@3.17.1':
-    resolution: {integrity: sha512-VRuxojp9p37ttS9Z5tSHYpXMY33jiJlRk/qfAVcTfVoYxmmXGV0p6rbwznrvZg4Dc+62rVR5DOWsQujwKvZ5pg==}
+  '@midwayjs/sequelize@3.18.0':
+    resolution: {integrity: sha512-tL+3Cw58+MWTwIhpJw6sbNjvqEpx77RRZNVB74zHCJee3PUIIDQg8pXIBoHGurDKqkXgkNyKUpiiToi38b/Qwg==}
     engines: {node: '>=12'}
 
-  '@midwayjs/session@3.17.1':
-    resolution: {integrity: sha512-w3AtxxDPO/1LfzZh3UEWtpUNNh4UhWJCJOR/MKIIznl2THacxjK6t/MvC+izCrypGumJTU6jig/uESPeKd8mBw==}
+  '@midwayjs/session@3.18.0':
+    resolution: {integrity: sha512-GfxsF+kWiRyXLTPP/cE/h76lg80sb0Bw8pwuJhxH8m59CMA2RdLNV4CrxSQn2P9/b/KZCkiZ3eRK+sguCBbDtg==}
     engines: {node: '>=12'}
 
-  '@midwayjs/swagger@3.17.3':
-    resolution: {integrity: sha512-AcCG66k7yZYZKouk1ueW7ok5ldHSmp0Nr+jDjgjiW7uwYGaLRILN/aYH8tk0eU4mPv6/Ir3twbTHkRyFmLkJsg==}
+  '@midwayjs/swagger@3.18.1':
+    resolution: {integrity: sha512-cLtfTDhLXQi8pOWCz7fPigvUEh1rzGyD/KjZXG+vG4rQSTRhkVHZKGovAiGtrjAGx3GvUTxLdwAAgIHc1OWa6w==}
 
-  '@midwayjs/validate@3.17.3':
-    resolution: {integrity: sha512-aNF/b7wvDUK2WZcCKptePAoOd84Vj/nzxDHbJ7Ks8o6QtK8dLFe6StsBPkFibLldgH+xEW4BrwcyxltcvkQarQ==}
+  '@midwayjs/validate@3.18.0':
+    resolution: {integrity: sha512-bPut8IlwO1ZMkO6gcYfDVLL9pUXFpS3IUgxWUr7om9tuEV5jZvsKEg4VwBxDTrJeFjVtbfLI4j8YT23MXXChMA==}
     engines: {node: '>=12'}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -625,6 +652,9 @@ packages:
   '@types/cookies@0.9.0':
     resolution: {integrity: sha512-40Zk8qR147RABiQ7NQnBzWzDcjKzNrntB5BAmeGCb2p/MIyOE+4BVvc17wumsUqUw00bJYqoXFHYygQnEFh4/Q==}
 
+  '@types/crypto-js@4.2.2':
+    resolution: {integrity: sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==}
+
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
@@ -655,8 +685,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/jsonwebtoken@9.0.6':
-    resolution: {integrity: sha512-/5hndP5dCjloafCXns6SZyESp3Ldq7YjH3zwzwczYnjxIT0Fqzk5ROSYVGfFyczIue7IUEj8hkvLbPoLQ18vQw==}
+  '@types/jsonwebtoken@9.0.7':
+    resolution: {integrity: sha512-ugo316mmTYBl2g81zDFnZ7cfxlut3o+/EQdaP7J8QN2kY6lJ22hmQYCK5EHcJHbrW+dkCGSCPgbG8JtYj6qSrg==}
 
   '@types/keygrip@1.0.6':
     resolution: {integrity: sha512-lZuNAY9xeJt7Bx4t4dx0rYCDqGPW8RXhQZK1td7d4H6E9zYbLoOtjBvfwdTKpsyxQI/2jv+armjX/RW+ZNpXOQ==}
@@ -693,6 +723,9 @@ packages:
 
   '@types/qs@6.9.15':
     resolution: {integrity: sha512-uXHQKES6DQKKCLh441Xv/dwxOq1TVS3JPUMlEqoEglvlhR6Mxnlew/Xq/LRVHpLyk7iK3zODe1qYHIMltO7XGg==}
+
+  '@types/random-string@0.2.0':
+    resolution: {integrity: sha512-0khK8WKMH5nR1H42p5z0gVSYhFv4YlV417nU71+tqs9uJpwDT3oKjw7p2HFefaQjj5BS1U6xqtqNwpA6W4DjFA==}
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
@@ -899,6 +932,9 @@ packages:
 
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
+
+  axios@1.7.7:
+    resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
 
   babel-jest@29.7.0:
     resolution: {integrity: sha512-BrvGY3xZSwEcCzKvKsCi2GgHqDqsYkOP4/by5xCgIwGXQxIEh+8ew3gmrE1y7XRR6LHZIj6yLYnUi/mm2KXKBg==}
@@ -1157,6 +1193,9 @@ packages:
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
+
+  crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
 
   crypto-random-string@2.0.0:
     resolution: {integrity: sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==}
@@ -1519,6 +1558,15 @@ packages:
 
   flatted@3.3.1:
     resolution: {integrity: sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==}
+
+  follow-redirects@1.15.9:
+    resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
 
   foreground-child@2.0.0:
     resolution: {integrity: sha512-dCIq9FpEcyQyXKCkyzmlPTFNgrCzPudOe+mhvJU5zAtlBnGVy2yKxtfsxK2tQBThwq225jcvBjpw1Gr40uzZCA==}
@@ -2063,6 +2111,9 @@ packages:
     resolution: {integrity: sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==}
     engines: {node: '>=12', npm: '>=6'}
 
+  jsrsasign@11.1.0:
+    resolution: {integrity: sha512-Ov74K9GihaK9/9WncTe1mPmvrO7Py665TUfUKvraXBpu+xcTWitrtuOwcjf4KMU9maPaYn0OuaWy0HOzy/GBXg==}
+
   jwa@1.4.1:
     resolution: {integrity: sha512-qiLX/xhEEFKUAJ6FiBMbes3w9ATzyk5W7Hvzpa/SLYdxNtng+gcurvrI7TbACjIXlsJyr05/S1oUhZrc63evQA==}
 
@@ -2246,6 +2297,11 @@ packages:
   mime@2.6.0:
     resolution: {integrity: sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==}
     engines: {node: '>=4.0.0'}
+    hasBin: true
+
+  mime@3.0.0:
+    resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
+    engines: {node: '>=10.0.0'}
     hasBin: true
 
   mimic-fn@2.1.0:
@@ -2559,6 +2615,9 @@ packages:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
     engines: {node: '>= 6'}
 
+  proxy-from-env@1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+
   pump@3.0.2:
     resolution: {integrity: sha512-tUPXtzlGM8FE3P0ZL6DVs/3P58k9nk8/jZeQCurTJylQA8qFYzHFfhBJkuqyE0FifOsQ0uKWekiZ5g8wtr28cw==}
 
@@ -2590,6 +2649,10 @@ packages:
   quick-lru@4.0.1:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
     engines: {node: '>=8'}
+
+  random-string@0.2.0:
+    resolution: {integrity: sha512-isA91IquV3ZrFbvwkAtExP8aGL+csx3KGEsEJrvCidzOHioPl5B5g7WyJlk0lMkEz5/i1PqrWTvcdtJHPtrp1g==}
+    engines: {node: '>= 0.10.0'}
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -3739,11 +3802,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@midwayjs/async-hooks-context-manager@3.17.1': {}
+  '@midwayjs/async-hooks-context-manager@3.18.0': {}
 
-  '@midwayjs/bootstrap@3.17.1':
+  '@midwayjs/bootstrap@3.18.0':
     dependencies:
-      '@midwayjs/async-hooks-context-manager': 3.17.1
+      '@midwayjs/async-hooks-context-manager': 3.18.0
       '@midwayjs/event-bus': 1.10.0
 
   '@midwayjs/cookies@1.2.0':
@@ -3751,7 +3814,7 @@ snapshots:
       scmp: 2.1.0
       should-send-same-site-none: 2.0.5
 
-  '@midwayjs/core@3.17.1':
+  '@midwayjs/core@3.18.0':
     dependencies:
       '@midwayjs/glob': 1.1.1
       class-transformer: 0.5.1
@@ -3768,25 +3831,25 @@ snapshots:
     dependencies:
       picomatch: 2.3.1
 
-  '@midwayjs/i18n@3.17.3':
+  '@midwayjs/i18n@3.18.0':
     dependencies:
       picomatch: 2.3.1
 
-  '@midwayjs/info@3.17.3':
+  '@midwayjs/info@3.18.0':
     dependencies:
       picomatch: 2.3.1
 
-  '@midwayjs/jwt@3.17.3':
+  '@midwayjs/jwt@3.18.0':
     dependencies:
-      '@types/jsonwebtoken': 9.0.6
+      '@types/jsonwebtoken': 9.0.7
       jsonwebtoken: 9.0.2
 
-  '@midwayjs/koa@3.17.1':
+  '@midwayjs/koa@3.18.0':
     dependencies:
       '@koa/router': 12.0.2
       '@midwayjs/cookies': 1.2.0
-      '@midwayjs/core': 3.17.1
-      '@midwayjs/session': 3.17.1
+      '@midwayjs/core': 3.18.0
+      '@midwayjs/session': 3.18.0
       '@types/koa': 2.15.0
       '@types/qs': 6.9.15
       koa: 2.15.3
@@ -3800,9 +3863,9 @@ snapshots:
       dayjs: 1.11.13
       safe-stable-stringify: 2.5.0
 
-  '@midwayjs/mock@3.17.1':
+  '@midwayjs/mock@3.18.0':
     dependencies:
-      '@midwayjs/async-hooks-context-manager': 3.17.1
+      '@midwayjs/async-hooks-context-manager': 3.18.0
       '@types/superagent': 4.1.14
       '@types/supertest': 2.0.16
       js-yaml: 4.1.0
@@ -3811,30 +3874,30 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@midwayjs/rabbitmq@3.17.1(@types/amqplib@0.10.5)(amqplib@0.10.4)':
+  '@midwayjs/rabbitmq@3.18.0(@types/amqplib@0.10.5)(amqplib@0.10.4)':
     dependencies:
-      '@midwayjs/core': 3.17.1
+      '@midwayjs/core': 3.18.0
       '@types/amqplib': 0.10.5
       amqp-connection-manager: 4.1.14(amqplib@0.10.4)
       amqplib: 0.10.4
 
-  '@midwayjs/redis@3.17.1':
+  '@midwayjs/redis@3.18.0':
     dependencies:
       ioredis: 5.4.1
     transitivePeerDependencies:
       - supports-color
 
-  '@midwayjs/sequelize@3.17.1': {}
+  '@midwayjs/sequelize@3.18.0': {}
 
-  '@midwayjs/session@3.17.1':
+  '@midwayjs/session@3.18.0':
     dependencies:
       '@midwayjs/cookies': 1.2.0
 
-  '@midwayjs/swagger@3.17.3': {}
+  '@midwayjs/swagger@3.18.1': {}
 
-  '@midwayjs/validate@3.17.3':
+  '@midwayjs/validate@3.18.0':
     dependencies:
-      '@midwayjs/i18n': 3.17.3
+      '@midwayjs/i18n': 3.18.0
       joi: 17.13.3
 
   '@nodelib/fs.scandir@2.1.5':
@@ -3933,6 +3996,8 @@ snapshots:
       '@types/keygrip': 1.0.6
       '@types/node': 16.18.108
 
+  '@types/crypto-js@4.2.2': {}
+
   '@types/debug@4.1.12':
     dependencies:
       '@types/ms': 0.7.34
@@ -3971,7 +4036,7 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/jsonwebtoken@9.0.6':
+  '@types/jsonwebtoken@9.0.7':
     dependencies:
       '@types/node': 16.18.108
 
@@ -4011,6 +4076,8 @@ snapshots:
   '@types/normalize-package-data@2.4.4': {}
 
   '@types/qs@6.9.15': {}
+
+  '@types/random-string@0.2.0': {}
 
   '@types/range-parser@1.2.7': {}
 
@@ -4233,6 +4300,14 @@ snapshots:
   async@3.2.6: {}
 
   asynckit@0.4.0: {}
+
+  axios@1.7.7:
+    dependencies:
+      follow-redirects: 1.15.9
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
 
   babel-jest@29.7.0(@babel/core@7.25.2):
     dependencies:
@@ -4547,6 +4622,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  crypto-js@4.2.0: {}
 
   crypto-random-string@2.0.0: {}
 
@@ -4888,6 +4965,8 @@ snapshots:
   flat@5.0.2: {}
 
   flatted@3.3.1: {}
+
+  follow-redirects@1.15.9: {}
 
   foreground-child@2.0.0:
     dependencies:
@@ -5637,6 +5716,8 @@ snapshots:
       ms: 2.1.3
       semver: 7.6.3
 
+  jsrsasign@11.1.0: {}
+
   jwa@1.4.1:
     dependencies:
       buffer-equal-constant-time: 1.0.1
@@ -5834,6 +5915,8 @@ snapshots:
       mime-db: 1.52.0
 
   mime@2.6.0: {}
+
+  mime@3.0.0: {}
 
   mimic-fn@2.1.0: {}
 
@@ -6140,6 +6223,8 @@ snapshots:
       kleur: 3.0.3
       sisteransi: 1.0.5
 
+  proxy-from-env@1.1.0: {}
+
   pump@3.0.2:
     dependencies:
       end-of-stream: 1.4.4
@@ -6164,6 +6249,8 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quick-lru@4.0.1: {}
+
+  random-string@0.2.0: {}
 
   randombytes@2.1.0:
     dependencies:
