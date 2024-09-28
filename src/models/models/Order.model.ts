@@ -1,7 +1,9 @@
-import { BelongsToMany, Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript'
+import { BelongsTo, BelongsToMany, Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript'
 import { getTableName } from '../tool';
 import { ApiProperty } from '@midwayjs/swagger';
 import { ScopeStore, ScopeType } from '../scope';
+import Payment from './Payment.model';
+import { OrderState } from '../../define/enums';
 
 // orderSn     String       @id @unique @db.VarChar(50)
 // // owner
@@ -43,21 +45,6 @@ import { ScopeStore, ScopeType } from '../scope';
 // payOrder    PayOrder[]
 
 export const orderScope = new ScopeStore({
-  eq_name: {
-    type: ScopeType.eq,
-    prop: 'name'
-  },
-  in_appIds: {
-    type: ScopeType.arrayContains,
-    prop: 'appIds'
-  },
-  eq_platform: {
-    type: ScopeType.eq,
-    prop: 'platform'
-  },
-  order: {
-    type: ScopeType.order,
-  }
 });
 
 /** 订单 */
@@ -73,6 +60,96 @@ export class Order extends Model<Order> {
   })
   id: number
 
+  /** appId */
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  appId: number;
+
+  /** 订单编号 应用id+luid */
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  orderSn: string;
+
+  /** 订单名称 */
+  @Column({
+    type: DataType.STRING,
+  })
+  orderName: string;
+
+  /** 商品名称 */
+  @Column({
+    type: DataType.STRING,
+  })
+  goodsName: string;
+  
+  /** 备注 */
+  @Column({
+    type: DataType.STRING,
+  })
+  note?: string;
+
+  /** 店铺名称 */
+  @Column({
+    type: DataType.STRING,
+  })
+  shopName?: string;
+
+  /** 订单原价 单位分 */
+  @Column({
+    type: DataType.INTEGER,
+  })
+  originalAmount: number;
+
+  /** 订单结算总价 单位分 */
+  @Column({
+    type: DataType.INTEGER,
+  })
+  amount: number;
+
+  /** 订单优惠 单位分 */
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  discount: number;
+
+  /** 优惠券id */
+  @Column({
+    type: DataType.ARRAY(DataType.INTEGER),
+    defaultValue: 0,
+  })
+  couponIds: number[];
+
+  /** 订单状态 -1. 已关闭 0. 待付款 1. 待发货、2. 待收货 3. 退款/售后 9. 已完成 */
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  state: OrderState;
+
+  /** 支付方式id */
+  @Column({
+    type: DataType.INTEGER,
+  })
+  paymentId: number;
+
+  /** 支付方式 */
+  @BelongsTo(() => Payment, {
+    constraints: false,
+    foreignKey: 'paymentId',
+  })
+  payment: Payment;
+
+  /** 商品信息 */
+  @Column({
+    type: DataType.JSON,
+    defaultValue: () => ({}),
+  })
+  goodsInfo: Record<string, any>;
 }
 
 export default Order;

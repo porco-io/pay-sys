@@ -88,3 +88,21 @@ export class LoginRequired implements IMiddleware<Context, NextFunction> {
     return 'loginRequired';
   }
 }
+
+
+
+@Middleware()
+export class InternalRequired implements IMiddleware<Context, NextFunction> {
+  resolve() {
+    return async (ctx: Context, next: NextFunction) => {
+      if (!ctx.state.application) {
+        throw new httpError.UnauthorizedError('仅允许内部调用');
+      }
+      return next();
+    };
+  }
+
+  static getName(): string {
+    return 'InternalRequired';
+  }
+}

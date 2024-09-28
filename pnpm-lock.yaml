@@ -80,12 +80,18 @@ importers:
       log4js:
         specifier: ^6.9.1
         version: 6.9.1
+      luid:
+        specifier: ^1.0.3
+        version: 1.0.3
       mime:
         specifier: ^3.0.0
         version: 3.0.0
       moment:
         specifier: ^2.30.1
         version: 2.30.1
+      nanoid:
+        specifier: ^5.0.7
+        version: 5.0.7
       pg:
         specifier: ^8.13.0
         version: 8.13.0
@@ -2241,6 +2247,9 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
+  luid@1.0.3:
+    resolution: {integrity: sha512-/Qj80WFl0cbuYXpUeXumQ0qXlZQHY9Ql0vqzjVl9UofxjGbFnL4hYcqWh6WFKZy3CnP88AivWwHw8UyMqkyBEQ==}
+
   make-dir@3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
     engines: {node: '>=8'}
@@ -2379,6 +2388,11 @@ packages:
   mylas@2.1.13:
     resolution: {integrity: sha512-+MrqnJRtxdF+xngFfUUkIMQrUUL0KsxbADUkn23Z/4ibGg192Q+z+CQyiYwvWTsYjJygmMR8+w3ZDa98Zh6ESg==}
     engines: {node: '>=12.0.0'}
+
+  nanoid@5.0.7:
+    resolution: {integrity: sha512-oLxFY2gd2IqnjcYyOXD8XGCftpGtZP2AbHbOkthDkvRywH5ayNtPVy9YlOPcHckXzbLTCHpkb7FB+yuxKV13pQ==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
 
   natural-compare-lite@1.4.0:
     resolution: {integrity: sha512-Tj+HTDSJJKaZnfiuw+iaF9skdPpTo2GtEly5JHnWV/hfv2Qj/9RKsGISQtLh2ox3l5EAGw487hnBee0sIJ6v2g==}
@@ -5862,6 +5876,8 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
+  luid@1.0.3: {}
+
   make-dir@3.1.0:
     dependencies:
       semver: 6.3.1
@@ -6018,6 +6034,8 @@ snapshots:
       tsc-alias: 1.8.10
 
   mylas@2.1.13: {}
+
+  nanoid@5.0.7: {}
 
   natural-compare-lite@1.4.0: {}
 

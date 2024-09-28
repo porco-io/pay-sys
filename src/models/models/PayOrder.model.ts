@@ -46,8 +46,12 @@ export class PayOrder extends Model<PayOrder> {
   })
   id: number;
 
-
+  @Column({
+    type: DataType.INTEGER,
+  })
+  orderId: number;
   
+
 }
 
 export default PayOrder;
