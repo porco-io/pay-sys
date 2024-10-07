@@ -82,3 +82,10 @@ podman run -d \
 
 
 [midway]: https://midwayjs.org
+
+
+### LUID nanoid uuid
+
+- LUID: 本地唯一标识符，由服务端生成，保证唯一性，长度为23位, 支持单机顺序但不保证并发顺序。
+- UUID: 通用唯一标识符，由算法生成，保证唯一性，长度为36位。
+- nanoid: 一个小型的 JavaScript 库，用于生成基于随机字符串的唯一 ID。 它可以生成短、唯一的 ID，适用于各种场景。

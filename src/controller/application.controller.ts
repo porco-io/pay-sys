@@ -1,14 +1,59 @@
-import { Inject, Controller, Queries, Post, Patch, Param, Body} from '@midwayjs/core';
+import { Inject, Controller, Queries, Post, Patch, Param, Body, httpError, Del, Get} from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { LoginRequired } from '../middleware/auth.middleware';
-import { CreateOrderDTO, UpdateOrderDTO } from '../dto/order.dto';
+import { CreateOrderDTO,  } from '../dto/order.dto';
+import { CreateApplicationDTO, QueryAppPageListDTO, UpdateApplicationDTO } from '../dto/application.dto';
+import { ApplicationService } from '../service/application.service';
 
-// TODO: 待开发
 @Controller('/api/application')
 export class PaymentController {
   @Inject()
   ctx: Context;
 
+  @Inject()
+  appService: ApplicationService;
+
+  /** 获取应用详情 */
+  @Get('/:key', {
+    description: '获取应用详情',
+    middleware: [
+      LoginRequired
+    ]
+  })
+  async find(@Param('key') key: string) {
+    const app = await this.appService.findByKey(key);
+    if (!app) {
+      throw new httpError.NotFoundError('应用不存在')
+    }
+    return app.secure();
+  }
+
+  /** 获取应用秘钥 */
+  @Get('/:key/secret', {
+    description: '获取应用秘钥',
+    middleware: [
+      LoginRequired
+    ]
+  })
+  async getSecret(@Param('key') key: string) {
+    const app = await this.appService.findByKey(key);
+    if (!app) {
+      throw new httpError.NotFoundError('应用不存在')
+    }
+    return app.secret;
+  }
+
+  /** 获取应用分页列表 */
+  @Get('/pageList', {
+    description: '获取应用分页列表',
+    middleware: [
+      LoginRequired
+    ]
+  })
+  async pageList(@Queries() params: QueryAppPageListDTO) {
+    const pageData = await this.appService.pageList(params);
+    return pageData;
+  }
   /** 创建应用 */
   @Post('/', {
     description: '创建应用',
@@ -16,45 +61,40 @@ export class PaymentController {
       LoginRequired
     ]
   })
-  async create(@Queries() params: CreateOrderDTO) {
-    return '待开发'
+  async create(@Body() params: CreateApplicationDTO) {
+    const app = await this.appService.create(params);
+    return app.secure();
   }
 
   /** 更新应用部分信息 */
-  @Patch('/:orderSn', {
-    description: '创建应用',
+  @Patch('/:key', {
+    description: '更新应用',
     middleware: [
       LoginRequired
     ]
   })
-  async updateOrder(@Param('orderSn') orderSn: string, @Body() params: UpdateOrderDTO) {
-    return '待开发'
-  }
-
-
-  /** 取消应用 */
-  @Patch('/:orderSn/cancel', {
-    description: '创建应用',
-    middleware: [
-      LoginRequired
-    ]
-  })
-  async cancelOrder(@Param('orderSn') orderSn: string) {
-    return '待开发'
+  async update(@Param('key') key: string, @Body() params: UpdateApplicationDTO) {
+    const app = await this.appService.findByKey(key);
+    if (!app) {
+      throw new httpError.NotFoundError('应用不存在')
+    }
+    await this.appService.update(app, params);
+    return app.secure();
   }
 
   /** 删除应用 */
-  @Patch('/:orderSn/delete', {
-    description: '创建应用',
+  @Del('/:key', {
+    description: '删除应用',
     middleware: [
       LoginRequired
     ]
   })
-  async deleteOrder(@Param('orderSn') orderSn: string) {
-    return '待开发'
+  async remove(@Param('key') key: string) {
+    const app = await this.appService.findByKey(key);
+    if (!app) {
+      throw new httpError.NotFoundError('应用不存在')
+    }
+    await this.appService.remove(app);
+    return app.secure();
   }
-
-
-  
-
 }

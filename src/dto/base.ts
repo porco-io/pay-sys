@@ -13,9 +13,13 @@ export class PaginationDTO {
 
 /** id验证规则 */
 export const IDRule = RuleType.number().integer().min(1);
+export const KeyRule = RuleType.string().min(6);
 
 /** 文件夹路径验证规则 */
 export const fileKeyRule = RuleType.string().max(250).allow('');
 
 /** 手机号验证规则 */
 export const phoneNumberRule = RuleType.string().pattern(/^1[3-9]\d{9}$/);
+
+/** 金额验证规则 */
+export const amountRule = RuleType.number().integer().min(0).max(100000000);

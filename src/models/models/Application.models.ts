@@ -9,20 +9,50 @@ import { ApiProperty } from "@midwayjs/swagger";
 import { ScopeStore, ScopeType } from "../scope";
 import { nanoRandom } from "../../utils/cipher";
 
-export const orderScope = new ScopeStore({});
+export const applicationScope = new ScopeStore({
+  contains_name: {
+    type: ScopeType.contains,
+    field: "name",
+  },
+  exclude_secret: {
+    type: ScopeType.custom,
+    scope: {
+      attributes: {
+        exclude: ['secret']
+      }
+    }
+  }
+});
 
 /** 外部应用 */
 @Table<Application>({
   tableName: getTableName("application"),
-  scopes: orderScope.mapOptions(),
+  scopes: applicationScope.mapOptions(),
 })
 export class Application extends Model<Application> {
+
+  @ApiProperty({ description: "应用ID" })
+  @Column({
+    type: DataType.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  })
+  id: number;
+
+  /** 应用Key */
   @Column({
     type: DataType.STRING,
-    primaryKey: true,
+    unique: true,
     defaultValue: () => nanoRandom()
   })
-  id: string;
+  key: string;
+
+  /** 秘钥 */
+  @Column({
+    type: DataType.STRING,
+    defaultValue: () => nanoRandom(32)
+  })
+  secret: string;
 
   /** 名称 */
   @Column({
@@ -43,7 +73,11 @@ export class Application extends Model<Application> {
   })
   paymentId: number;
 
-  
+
+  secure() {
+    this.setAttributes('secret', '******')
+    return this;
+  }
 }
 
 export default Application;

@@ -2,6 +2,7 @@ import { BelongsToMany, Column, DataType, HasMany, HasOne, Model, Table } from '
 import { getTableName } from '../tool';
 import { ApiProperty } from '@midwayjs/swagger';
 import { ScopeStore, ScopeType } from '../scope';
+import { nanoRandom } from '../../utils/cipher';
 
 export const paymentScope = new ScopeStore({
   eq_name: {
@@ -38,8 +39,8 @@ export class Payment extends Model<Payment> {
     type: DataType.ARRAY(DataType.STRING),
     defaultValue: () => ([])
   })
-  @ApiProperty({ description: '允许使用该支付的appId列表'})
-  appIds: string[];
+  @ApiProperty({ description: '允许使用该支付的appKey列表'})
+  appKeys: string[];
 
   @Column({
     type: DataType.STRING,
@@ -51,7 +52,8 @@ export class Payment extends Model<Payment> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
+    defaultValue: () => nanoRandom(8)
   })
   @ApiProperty({ description: '支付代号'})
   code: string;

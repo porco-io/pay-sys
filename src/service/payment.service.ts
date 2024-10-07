@@ -11,7 +11,7 @@ export class PaymentService {
     const randomId = v4().replace(/-/g, '').slice(0, 8).toUpperCase();
     return randomId
   }
-  /** 创建支付 */
+  /** 查询支付方式 */
   async findByCode(name: string) {
     const payment = await Payment.findOne({
       where: {

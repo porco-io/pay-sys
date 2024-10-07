@@ -62,10 +62,10 @@ export class Order extends Model<Order> {
 
   /** appId */
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
     allowNull: false,
   })
-  appId: number;
+  appKey: string;
 
   /** 订单编号 应用id+luid */
   @Column({
@@ -74,17 +74,29 @@ export class Order extends Model<Order> {
   })
   orderSn: string;
 
+  /** 业务单号 */
+  @Column({
+    type: DataType.STRING,
+  })
+  bizNo?: string;
+
+  /** 购买用户特征ID */
+  @Column({
+    type: DataType.STRING,
+  })
+  userId?: string;
+
   /** 订单名称 */
   @Column({
     type: DataType.STRING,
   })
-  orderName: string;
+  orderName?: string;
 
   /** 商品名称 */
   @Column({
     type: DataType.STRING,
   })
-  goodsName: string;
+  goodsName?: string;
   
   /** 备注 */
   @Column({
@@ -120,7 +132,7 @@ export class Order extends Model<Order> {
   /** 优惠券id */
   @Column({
     type: DataType.ARRAY(DataType.INTEGER),
-    defaultValue: 0,
+    defaultValue: () => ([]),
   })
   couponIds: number[];
 
@@ -130,6 +142,26 @@ export class Order extends Model<Order> {
     defaultValue: 0,
   })
   state: OrderState;
+
+  /** 售后服务类型 1. 仅退款 2. 换货 3. 维修 4. 退货退款 */
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  refundType: number;
+
+  /** 售后单号 */
+  @Column({
+    type: DataType.STRING,
+  })
+  refundNo?: string;
+
+  /** 售后状态 0. 无售后 1. 待处理 2. 处理中 3. 已完成 */
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  refundState: number;
 
   /** 支付方式id */
   @Column({
