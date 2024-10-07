@@ -17,6 +17,14 @@ export const paymentScope = new ScopeStore({
     type: ScopeType.eq,
     prop: 'platform'
   },
+  eq_code: {
+    type: ScopeType.eq,
+    prop: 'code'
+  },
+  in_codes: {
+    type: ScopeType.in,
+    prop: 'code'
+  },
   order: {
     type: ScopeType.order,
   }

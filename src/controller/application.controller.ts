@@ -1,8 +1,7 @@
 import { Inject, Controller, Queries, Post, Patch, Param, Body, httpError, Del, Get} from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { LoginRequired } from '../middleware/auth.middleware';
-import { CreateOrderDTO,  } from '../dto/order.dto';
-import { CreateApplicationDTO, QueryAppPageListDTO, UpdateApplicationDTO } from '../dto/application.dto';
+import { CreateApplicationDTO, QueryAppPageListDTO, SetAppPaymentsDTO, UpdateApplicationDTO } from '../dto/application.dto';
 import { ApplicationService } from '../service/application.service';
 
 @Controller('/api/application')
@@ -66,9 +65,8 @@ export class PaymentController {
     return app.secure();
   }
 
-  /** 更新应用部分信息 */
   @Patch('/:key', {
-    description: '更新应用',
+    description: '更新应用部分信息',
     middleware: [
       LoginRequired
     ]
@@ -79,6 +77,21 @@ export class PaymentController {
       throw new httpError.NotFoundError('应用不存在')
     }
     await this.appService.update(app, params);
+    return app.secure();
+  }
+
+  @Patch('/:key/payments', {
+    description: '更新应用支付方式',
+    middleware: [
+      LoginRequired
+    ]
+  })
+  async setAppPayments(@Param('key') key: string, @Body() params: SetAppPaymentsDTO) {
+    const app = await this.appService.findByKey(key);
+    if (!app) {
+      throw new httpError.NotFoundError('应用不存在')
+    }
+    await this.appService.setAppPayments(app, params.paymentCodes);
     return app.secure();
   }
 

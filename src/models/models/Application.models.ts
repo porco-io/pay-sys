@@ -24,7 +24,7 @@ export const applicationScope = new ScopeStore({
   }
 });
 
-/** 外部应用 */
+/** 应用 */
 @Table<Application>({
   tableName: getTableName("application"),
   scopes: applicationScope.mapOptions(),
@@ -69,9 +69,9 @@ export class Application extends Model<Application> {
 
   /** 绑定支付方式 */
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.ARRAY(DataType.STRING),
   })
-  paymentId: number;
+  paymentCodes: string[];
 
 
   secure() {
