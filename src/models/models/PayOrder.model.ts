@@ -40,18 +40,10 @@ export const payOrderScope = new ScopeStore({
 })
 export class PayOrder extends Model<PayOrder> {
   @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+    type: DataType.STRING,
   })
-  id: number;
-
-  @Column({
-    type: DataType.INTEGER,
-  })
-  orderId: number;
+  orderId: string;
   
-
 }
 
 export default PayOrder;

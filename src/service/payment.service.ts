@@ -62,17 +62,6 @@ export class PaymentService {
 
   /** 更新支付 */
   async updatePayment(payment: Payment, params: UpdatePaymentDTO) {
-    // if (params.name && payment.name !== params.name) {
-    //   const sameNamePayment = await Payment.findOne({
-    //     where: {
-    //       name: params.name,
-    //     },
-    //     attributes: ['id'],
-    //   });
-    //   if (sameNamePayment) {
-    //     throw new httpError.ConflictError('名称已被使用');
-    //   }
-    // }
     await payment.update(omitBy(params, isNil));
     return payment;
   }
@@ -81,17 +70,18 @@ export class PaymentService {
     params: QueryPaymentPageListDTO
   ): Promise<IStruct.PageList<Payment>> {
     const { page, size } = params;
-
+    console.log(params);
     const { rows, count } = await Payment.scope([
       paymentScope.method("eq_name", params.name),
       paymentScope.method("eq_platform", params.platform),
-      paymentScope.method("in_appIds", params.appId),
+      paymentScope.method("in_appKeys", params.appKey),
     ]).findAndCountAll({
       offset: (page - 1) * size,
       limit: size,
       attributes: {
         exclude: ["details"],
       },
+      paranoid: !params.includeDisabled,
     });
 
     return {

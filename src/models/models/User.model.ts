@@ -18,13 +18,6 @@ export const userScope = new ScopeStore({
   scopes: userScope.mapOptions()
 })
 export class User extends Model<User> {
-  @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  })
-  @ApiProperty()
-  id: number
 
   @Column({
     type: DataType.STRING(15),

@@ -53,12 +53,6 @@ export const orderScope = new ScopeStore({
   scopes: orderScope.mapOptions()
 })
 export class Order extends Model<Order> {
-  @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  })
-  id: number
 
   /** appId */
   @Column({

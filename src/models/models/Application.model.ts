@@ -30,15 +30,6 @@ export const applicationScope = new ScopeStore({
   scopes: applicationScope.mapOptions(),
 })
 export class Application extends Model<Application> {
-
-  @ApiProperty({ description: "应用ID" })
-  @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  })
-  id: number;
-
   /** 应用Key */
   @Column({
     type: DataType.STRING,

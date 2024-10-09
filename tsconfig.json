@@ -19,6 +19,7 @@
     "declaration": true,
     "incremental": false,
     "composite": false,
+    "allowJs": true,
     "resolveJsonModule": true,
     // "baseUrl": "./",
     // "paths": {
@@ -26,7 +27,7 @@
     // },
     "forceConsistentCasingInFileNames": true,
     "typeRoots": [ "./src/typings", "./node_modules/@types"],
-    "outDir": "dist"
+    "outDir": "dist",
   },
   "exclude": [
     "dist",

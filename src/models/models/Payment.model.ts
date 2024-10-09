@@ -9,9 +9,9 @@ export const paymentScope = new ScopeStore({
     type: ScopeType.eq,
     prop: 'name'
   },
-  in_appIds: {
+  in_appKeys: {
     type: ScopeType.arrayContains,
-    prop: 'appIds'
+    prop: 'appKeys'
   },
   eq_platform: {
     type: ScopeType.eq,
@@ -36,12 +36,6 @@ export const paymentScope = new ScopeStore({
   scopes: paymentScope.mapOptions()
 })
 export class Payment extends Model<Payment> {
-  @Column({
-    type: DataType.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  })
-  id: number
 
   @Column({
     type: DataType.ARRAY(DataType.STRING),

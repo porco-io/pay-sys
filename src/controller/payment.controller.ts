@@ -1,4 +1,4 @@
-import { Inject, Controller, Get, Query, Post, Body, Patch, httpError, Param } from '@midwayjs/core';
+import { Inject, Controller, Get, Query, Post, Body, Patch, httpError, Param, Del } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { UserService } from '../service/user.service';
 import { CreatePaymentDTO, QueryPaymentPageListDTO } from '../dto/payment.dto';
@@ -40,7 +40,6 @@ export class PaymentController {
     return this.paymentService.pageList(query);
   }
 
-
   // 获取支付方式详情
   @Get('/:code', {
     description: '获取支付方式详情'
@@ -50,6 +49,19 @@ export class PaymentController {
     if (!payment) {
       throw new httpError.NotFoundError('支付方式不存在');
     }
+    return payment;
+  }
+
+  // 获取支付方式详情
+  @Del('/:code', {
+    description: '删除支付方式'
+  })
+  async remove(@Param('code') code: string) {
+    const payment = await this.paymentService.findByCode(code);
+    if (!payment) {
+      throw new httpError.NotFoundError('支付方式不存在');
+    }
+    await payment.destroy();
     return payment;
   }
 }

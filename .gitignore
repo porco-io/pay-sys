@@ -4,3 +4,9 @@ dist
 .env.*
 
 logs
+
+# 证书文件
+*.pem
+*.key
+*.p12
+*.crt

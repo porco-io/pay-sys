@@ -3,4 +3,5 @@ import { User } from "./models/User.model"
 
 export const models = {
   User,
+  
 }

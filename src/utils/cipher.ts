@@ -1,7 +1,6 @@
-import { customAlphabet } from "nanoid";
-
+import nanoid from "nanoid";
 
 const nanoAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 export function nanoRandom(size: number = 24) {
-  return customAlphabet(nanoAlphabet, size)();
+  return nanoid.customAlphabet(nanoAlphabet, size)();
 }

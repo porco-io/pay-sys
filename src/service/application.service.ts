@@ -1,7 +1,7 @@
 import { httpError, Inject, Provide } from '@midwayjs/core';
 import { isNil, omitBy, uniq } from 'lodash';
 import { CreateApplicationDTO, QueryAppPageListDTO, UpdateApplicationDTO } from '../dto/application.dto';
-import Application, { applicationScope } from '../models/models/Application.models';
+import Application, { applicationScope } from '../models/models/Application.model';
 import { PaymentService } from './payment.service';
 
 @Provide()
@@ -27,7 +27,16 @@ export class ApplicationService {
   }
   /** 创建 */
   async create(params: CreateApplicationDTO) {
-    const app = await Application.create(params);
+    const { name, ...defaults } = params;
+    const [app, created] = await Application.findOrCreate({
+      where: {
+        name: params.name,
+      },
+      defaults: defaults
+    });
+    if (!created) {
+      throw new httpError.ConflictError('应用名称已存在');
+    }
     return app;
   }
 
@@ -74,9 +83,16 @@ export class ApplicationService {
     const uniqCodes = uniq(paymentCodes);
     const payments = await this.paymentService.findByCodes(uniqCodes);
     if (uniqCodes.length !== payments.length) {
-      throw new httpError.NotFoundError('支付方式不存在, 请检查支付代码');
+      throw new httpError.NotFoundError('支付方式不存在, 请检查支付代码是否正确');
     }
     app.update({ paymentCodes: uniqCodes });
+    /// 更新支付的appKeys
+    await Promise.all(payments.map(pm => {
+      if (pm.appKeys.includes(app.key)) {
+        return null;
+      }
+      return pm.update({ appKeys: uniq(pm.appKeys.concat(app.key)) })
+    }))
     return app;
   }
 }
