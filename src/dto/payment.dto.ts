@@ -77,7 +77,7 @@ export class QueryPaymentPageListDTO extends PaginationDTO {
   @ApiProperty({ description: 'appKey' })
   appKey?: string
 
-  @Rule(RuleType.bool())
+  @Rule(RuleType.bool().default(false))
   @ApiProperty({ description: '包含失效的' })
-  includeDisabled?: boolean
+  withDisabled?: boolean
 }

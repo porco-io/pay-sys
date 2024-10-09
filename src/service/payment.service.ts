@@ -70,7 +70,6 @@ export class PaymentService {
     params: QueryPaymentPageListDTO
   ): Promise<IStruct.PageList<Payment>> {
     const { page, size } = params;
-    console.log(params);
     const { rows, count } = await Payment.scope([
       paymentScope.method("eq_name", params.name),
       paymentScope.method("eq_platform", params.platform),
@@ -81,7 +80,7 @@ export class PaymentService {
       attributes: {
         exclude: ["details"],
       },
-      paranoid: !params.includeDisabled,
+      paranoid: !params.withDisabled,
     });
 
     return {
