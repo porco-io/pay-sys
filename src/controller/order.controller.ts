@@ -14,6 +14,7 @@ import { Context } from "@midwayjs/koa";
 import { LoginRequired } from "../middleware/auth.middleware";
 import { CancelOrderDTO, CreateOrderDTO, QueryOrderPageListDTO } from "../dto/order.dto";
 import { OrderService } from "../service/order.service";
+import { CreatePayOrderDTO } from "../dto/payOrder.dto";
 
 @Controller("/api/order")
 export class OrderController {
@@ -31,6 +32,22 @@ export class OrderController {
   async create(@Body() params: CreateOrderDTO) {
     const order = await this.orderService.create(params);
     return order;
+  }
+
+
+  /** 创建订单支付单 */
+  @Post("/:orderSn/payment", {
+    description: "创建订单支付单",
+    middleware: [LoginRequired],
+  })
+  async createPayOrder(@Param("orderSn") orderSn: string, @Body() params: CreatePayOrderDTO) {
+    // const order = await this.orderService.create(params);
+    const order = await this.orderService.findBySn(orderSn);
+    if (!order) {
+      throw new httpError.NotFoundError("订单不存在");
+    }
+    // const payOrder = await this
+    return payOrder;
   }
 
   /** 获取订单详情 */
