@@ -11,7 +11,7 @@ import { nanoRandom } from "../../utils/cipher";
 
 export const applicationScope = new ScopeStore({
   contains_name: {
-    type: ScopeType.contains,
+    type: ScopeType.contain,
     field: "name",
   },
   exclude_secret: {
@@ -36,6 +36,7 @@ export class Application extends Model<Application> {
     unique: true,
     defaultValue: () => nanoRandom()
   })
+  @ApiProperty({ description: '应用Key'})
   key: string;
 
   /** 秘钥 */
@@ -43,6 +44,7 @@ export class Application extends Model<Application> {
     type: DataType.STRING,
     defaultValue: () => nanoRandom(32)
   })
+  @ApiProperty({ description: '应用秘钥'})
   secret: string;
 
   /** 名称 */
@@ -50,24 +52,33 @@ export class Application extends Model<Application> {
     type: DataType.STRING,
     allowNull: false,
   })
+  @ApiProperty({ description: '应用名称'})
   name: string;
 
   /** 应用描述 */
   @Column({
     type: DataType.STRING,
   })
+  @ApiProperty({ description: '应用描述'})
   desc: string;
 
   /** 绑定支付方式 */
   @Column({
     type: DataType.ARRAY(DataType.STRING),
   })
+  @ApiProperty({ description: '支持的支付方式'})
   paymentCodes: string[];
 
 
   secure() {
-    this.setAttributes('secret', '******')
+    this.setDataValue('secret', '********')
     return this;
+  }
+
+  static findByKey(key: string) {
+    return Application.findOne({
+      where: { key },
+    });
   }
 }
 

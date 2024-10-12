@@ -23,3 +23,5 @@ export const phoneNumberRule = RuleType.string().pattern(/^1[3-9]\d{9}$/);
 
 /** 金额验证规则 */
 export const amountRule = RuleType.number().integer().min(0).max(100000000);
+
+export const orderSnRule = RuleType.string().pattern(/^[0-9A]{2,3}\d{18,}$/);

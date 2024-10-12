@@ -2,6 +2,7 @@ import { Inject, Controller, Get, Query, Post, Body } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { UserService } from '../service/user.service';
 import { SigninDTO, SignupDTO } from '../dto/auth.dto';
+import { LoginRequired } from '../middleware/auth.middleware';
 
 @Controller('/api/users')
 export class UserController {
@@ -11,13 +12,12 @@ export class UserController {
   @Inject()
   userService: UserService;
 
-  // 管理用户
   @Get('/me', {
-    description: '获取当前用户信息'
+    description: '获取当前用户信息',
+    middleware: [LoginRequired]
   })
   async me() {
     return this.ctx.state.user;
   }
-
  
 }

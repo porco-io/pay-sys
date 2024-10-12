@@ -1,26 +1,65 @@
-import { Inject, Controller, Get, httpError, Queries, Post, Patch, Param, Body, Del} from '@midwayjs/core';
-import { Context } from '@midwayjs/koa';
-import { LoginRequired } from '../middleware/auth.middleware';
-import { UploadDTO } from '../dto/tool.dto';
-import { UPLOAD_TYPE, UploadOssHelper, UploadParams } from '../utils/alicloud';
-import { CreateOrderDTO } from '../dto/order.dto';
+import {
+  Inject,
+  Controller,
+  Get,
+  httpError,
+  Queries,
+  Post,
+  Patch,
+  Param,
+  Body,
+  Del,
+} from "@midwayjs/core";
+import { Context } from "@midwayjs/koa";
+import { LoginRequired } from "../middleware/auth.middleware";
+import { CancelOrderDTO, CreateOrderDTO, QueryOrderPageListDTO } from "../dto/order.dto";
+import { OrderService } from "../service/order.service";
 
-@Controller('/api/order')
+@Controller("/api/order")
 export class OrderController {
   @Inject()
   ctx: Context;
 
+  @Inject()
+  orderService: OrderService;
+
   /** 创建订单 */
-  @Post('/', {
-    description: '创建订单',
-    middleware: [
-      LoginRequired
-    ]
+  @Post("/", {
+    description: "创建订单",
+    middleware: [LoginRequired],
   })
   async create(@Body() params: CreateOrderDTO) {
-    return '待开发'
+    const order = await this.orderService.create(params);
+    return order;
   }
 
+  /** 获取订单详情 */
+  @Get("/:orderSn", {
+    description: "获取订单详情",
+    middleware: [LoginRequired],
+  })
+  async detail(@Param("orderSn") orderSn: string) {
+    const order = await this.orderService.findBySn(orderSn);
+    const payment = order.paymentId
+      ? await order.$get("payment", {
+          attributes: ["id", "code", "name", "icon"],
+        })
+      : null;
+    order.setDataValue("payment", payment);
+    return order;
+  }
+
+  /** 获取订单分页列表 */
+  @Get("/pageList", {
+    description: "获取订单分页列表",
+    middleware: [LoginRequired],
+  })
+  async pageList(@Queries() params: QueryOrderPageListDTO) {
+    const pageData = await this.orderService.pageList(params);
+    return pageData;
+  }
+
+  
   // /** 更新订单部分信息 */
   // @Patch('/:orderSn', {
   //   description: '创建订单',
@@ -32,30 +71,23 @@ export class OrderController {
   //   return '待开发'
   // }
 
-
   /** 取消订单 */
-  @Patch('/:orderSn/cancel', {
-    description: '更新订单',
-    middleware: [
-      LoginRequired
-    ]
+  @Patch("/:orderSn/cancel", {
+    description: "取消订单",
+    middleware: [LoginRequired],
   })
-  async cancel(@Param('orderSn') orderSn: string) {
-    return '待开发'
+  async cancel(@Param("orderSn") orderSn: string, @Body() params: CancelOrderDTO) {
+    const order = await this.orderService.findBySn(orderSn);
+    if (!order) {
+      throw new httpError.NotFoundError("订单不存在");
+    }
+    if (params.force) {
+      await this.orderService.cancelForce(order)
+    } else {
+      await this.orderService.cancel(order)
+    }
+
+    return true;
   }
-
-  /** 删除订单 */
-  @Del('/:orderSn', {
-    description: '删除订单',
-    middleware: [
-      LoginRequired
-    ]
-  })
-  async remove(@Param('orderSn') orderSn: string) {
-    return '待开发'
-  }
-
-
-
 
 }

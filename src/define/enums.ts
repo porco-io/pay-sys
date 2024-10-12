@@ -28,16 +28,30 @@ export const paymentPlatformCn = {
 
 /** 订单状态 */
 export enum OrderState {
+  /* 初始化 */
+  init = 'init',
   /* 已关闭 */
-  close = -1,
+  closed = 'closed',
   /* 待付款 */
-  paying = 0,
+  paying = 'paying',
   /* 待发货 */
-  prepare = 1,
+  preparing = 'preparing',
   /* 待收货 */
-  shipping = 2,
+  shipping = 'shipping',
   /* 退款/售后 */
-  refund = 3,
+  refunding = 'refunding',
   /* 已完成 */
-  completed = 9,
+  completed = 'completed',
+}
+
+/** 售后状态 0. 无售后 1. 申请中 2. 处理中 3. 已完成 */
+export enum RefundState {
+  /* 无售后 */
+  none = 'none',
+  /* 申请中 */
+  applying = 'applying',
+  /* 处理中 */
+  processing = 'processing',
+  /* 已完成 */
+  completed = 'completed',
 }

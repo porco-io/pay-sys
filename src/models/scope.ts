@@ -10,7 +10,7 @@ export enum ScopeType {
   gte = 'gte',
   lt = 'lt',
   lte = 'lte',
-  contains = 'contains',
+  contain = 'contains',
   attrs = 'attrs',
   in = 'in',
   order = 'order',
@@ -28,7 +28,7 @@ type ScopeTypeHandlers = {
   [ScopeType.gte]: ScopeFindOption<number>;
   [ScopeType.lt]: ScopeFindOption<number>;
   [ScopeType.lte]: ScopeFindOption<number>;
-  [ScopeType.contains]: ScopeFindOption<string>;
+  [ScopeType.contain]: ScopeFindOption<string>;
   [ScopeType.arrayContains]: ScopeFindOption<string | number |  (string | number)[] | undefined>;
   [ScopeType.in]: ScopeFindOption<any[]>;
   [ScopeType.attrs]: ScopeFindOption<string[]>;
@@ -130,7 +130,7 @@ const scopeHandlers: {
       },
     };
   },
-  [ScopeType.contains]: prop => value => {
+  [ScopeType.contain]: prop => value => {
     if (isNil(value)) return {};
     return {
       where: {

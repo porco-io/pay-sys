@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "dependencies": {
+    "@akashrajpurohit/snowflake-id": "^2.0.0",
     "@midwayjs/bootstrap": "^3.18.0",
     "@midwayjs/core": "^3.18.0",
     "@midwayjs/cross-domain": "^3.18.0",

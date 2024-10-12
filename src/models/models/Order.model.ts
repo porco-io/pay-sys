@@ -3,7 +3,7 @@ import { getTableName } from '../tool';
 import { ApiProperty } from '@midwayjs/swagger';
 import { ScopeStore, ScopeType } from '../scope';
 import Payment from './Payment.model';
-import { OrderState } from '../../define/enums';
+import { OrderState, RefundState } from '../../define/enums';
 
 // orderSn     String       @id @unique @db.VarChar(50)
 // // owner
@@ -45,6 +45,72 @@ import { OrderState } from '../../define/enums';
 // payOrder    PayOrder[]
 
 export const orderScope = new ScopeStore({
+  contain_orderName: {
+    type: ScopeType.contain,
+    prop: 'orderName',
+  },
+  contain_goodsName: {
+    type: ScopeType.contain,
+    prop: 'goodsName',
+  },
+  eq_shopName: {
+    type: ScopeType.contain,
+    prop: 'shopName',
+  },
+  contain_bizNo: {
+    type: ScopeType.contain,
+    prop: 'bizNo',
+  },
+  eq_appKey: {
+    type: ScopeType.eq,
+    prop: 'appKey',
+  },
+  eq_bizNo: {
+    type: ScopeType.eq,
+    prop: 'bizNo',
+  },
+  eq_state: {
+    type: ScopeType.eq,
+    prop: 'state',
+  },
+  eq_refundState: {
+    type: ScopeType.eq,
+    prop: 'refundState',
+  },
+  eq_paymentId: {
+    type: ScopeType.eq,
+    prop: 'paymentId',
+  },
+  eq_paymentCode: {
+    type: ScopeType.eq,
+    prop: 'paymentCode',
+  },
+  eq_refundType: {
+    type: ScopeType.eq,
+    prop:'refundType',
+  },
+  eq_userId: {
+    type: ScopeType.eq,
+    prop: 'userId',
+  },
+  contain_userId: {
+    type: ScopeType.contain,
+    prop: 'userId',
+  },
+  between_amount: {
+    type: ScopeType.between,
+    prop: 'amount',
+  },
+  include_payment: {
+    type: ScopeType.custom,
+    scope: {
+      include: [{
+        model: Payment,
+        as: 'payment',
+        attributes: ['id', 'code', 'name', 'icon']
+      }]
+    }
+  }
 });
 
 /** 订单 */
@@ -53,67 +119,76 @@ export const orderScope = new ScopeStore({
   scopes: orderScope.mapOptions()
 })
 export class Order extends Model<Order> {
-
-  /** appId */
+  /** appKey */
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
+  @ApiProperty({ description: '所属应用'})
   appKey: string;
 
-  /** 订单编号 应用id+luid */
+  /** 订单编号 `${应用id}_${luid}` */
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
+  @ApiProperty({ description: '订单编号 `${应用id}_${luid}`'})
   orderSn: string;
 
   /** 业务单号 */
   @Column({
     type: DataType.STRING,
   })
+  @ApiProperty({ description: '业务单号'})
   bizNo?: string;
 
-  /** 购买用户特征ID */
+  /** 购买用户特征ID `${用户ID}` */
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(20),
   })
+  @ApiProperty({ description: '用户特征id'})
   userId?: string;
 
   /** 订单名称 */
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(50),
   })
+  @ApiProperty({ description: '订单名称'})
   orderName?: string;
 
   /** 商品名称 */
   @Column({
     type: DataType.STRING,
   })
+  @ApiProperty({ description: '商品名称'})
   goodsName?: string;
   
   /** 备注 */
   @Column({
     type: DataType.STRING,
   })
+  @ApiProperty({ description: '备注'})
   note?: string;
 
   /** 店铺名称 */
   @Column({
     type: DataType.STRING,
   })
+  @ApiProperty({ description: '店铺名称'})
   shopName?: string;
 
   /** 订单原价 单位分 */
   @Column({
     type: DataType.INTEGER,
   })
+  @ApiProperty({ description: '订单原价 单位分'})
   originalAmount: number;
 
   /** 订单结算总价 单位分 */
   @Column({
     type: DataType.INTEGER,
   })
+  @ApiProperty({ description: '订单结算总价 单位分'})
   amount: number;
 
   /** 订单优惠 单位分 */
@@ -121,6 +196,7 @@ export class Order extends Model<Order> {
     type: DataType.INTEGER,
     defaultValue: 0,
   })
+  @ApiProperty({ description: '订单优惠 单位分'})
   discount: number;
 
   /** 优惠券id */
@@ -128,13 +204,15 @@ export class Order extends Model<Order> {
     type: DataType.ARRAY(DataType.INTEGER),
     defaultValue: () => ([]),
   })
+  @ApiProperty({ description: '优惠券id 单位分'})
   couponIds: number[];
 
-  /** 订单状态 -1. 已关闭 0. 待付款 1. 待发货、2. 待收货 3. 退款/售后 9. 已完成 */
+  /** 订单状态 */
   @Column({
-    type: DataType.INTEGER,
-    defaultValue: 0,
+    type: DataType.STRING(10),
+    defaultValue: OrderState.init,
   })
+  @ApiProperty({ description: '订单状态', enum: OrderState })
   state: OrderState;
 
   /** 售后服务类型 1. 仅退款 2. 换货 3. 维修 4. 退货退款 */
@@ -142,26 +220,37 @@ export class Order extends Model<Order> {
     type: DataType.INTEGER,
     defaultValue: 0,
   })
+  @ApiProperty({ description: '售后服务类型 1. 仅退款 2. 换货 3. 维修 4. 退货退款 '})
   refundType: number;
 
   /** 售后单号 */
   @Column({
     type: DataType.STRING,
   })
+  @ApiProperty({ description: '售后单号'})
   refundNo?: string;
 
-  /** 售后状态 0. 无售后 1. 待处理 2. 处理中 3. 已完成 */
+  /** 售后退款金额 */
   @Column({
     type: DataType.INTEGER,
     defaultValue: 0,
   })
-  refundState: number;
+  @ApiProperty({ description: '售后退款金额'})
+  refundAmount: number;
 
   /** 支付方式id */
   @Column({
     type: DataType.INTEGER,
   })
+  @ApiProperty({ description: '支付方式id'})
   paymentId: number;
+
+  /** 支付代码 */
+  @Column({
+    type: DataType.STRING,
+  })
+  @ApiProperty({ description: '支付代码'})
+  paymentCode: string;
 
   /** 支付方式 */
   @BelongsTo(() => Payment, {
@@ -175,7 +264,15 @@ export class Order extends Model<Order> {
     type: DataType.JSON,
     defaultValue: () => ({}),
   })
+  @ApiProperty({ description: '商品信息'})
   goodsInfo: Record<string, any>;
+
+  /** 订单取消原因 */
+  @Column({
+    type: DataType.STRING,
+  })
+  @ApiProperty({ description: '订单取消原因'})
+  closeReason?: string;
 }
 
 export default Order;

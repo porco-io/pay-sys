@@ -1,6 +1,7 @@
 import { ApiProperty } from "@midwayjs/swagger";
 import { Rule, RuleType } from "@midwayjs/validate";
-import { amountRule, IDRule, KeyRule } from "./base";
+import { amountRule, IDRule, KeyRule, PaginationDTO } from "./base";
+import { OrderState } from "../define/enums";
 
 export class CreateOrderDTO {
   @ApiProperty({ description: "应用Key" })
@@ -43,11 +44,62 @@ export class CreateOrderDTO {
   @Rule(RuleType.object().required())
   goodsInfo: Record<string, any>;
 
-  @ApiProperty({ description: "支付方式id" })
-  @Rule(IDRule.required())
-  paymentId: number;
-
   @ApiProperty({ description: "优惠券id" })
   @Rule(RuleType.array().items(IDRule).default(() => ([])))
   couponIds: number[];
+}
+
+
+export class QueryOrderPageListDTO extends PaginationDTO {
+
+  @Rule(RuleType.string().allow('').max(32))
+  @ApiProperty({ description: '应用id', example: '' })
+  appKey?: string;
+
+  @Rule(RuleType.string().allow('').max(50))
+  @ApiProperty({ description: '订单名称', example: '衣服' })
+  orderName?: string;
+
+  @Rule(RuleType.string().allow('').max(20))
+  @ApiProperty({ description: '用户ID', example: '' })
+  userId?: string;
+
+  @Rule(RuleType.string().allow('').max(20))
+  @ApiProperty({ description: '店铺名称', example: '' })
+  shopName?: string;
+
+  @Rule(RuleType.string().allow('').max(20))
+  @ApiProperty({ description: '支付代码', example: '' })
+  paymentCode?: string;
+
+  @Rule(RuleType.string().allow('').equal(...Object.values(OrderState)).max(10))
+  @ApiProperty({ description: '订单状态', example: '' })
+  state?: OrderState;
+  
+  @Rule(RuleType.string().allow('').equal(...Object.values(OrderState)).max(10))
+  @ApiProperty({ description: '退款状态', example: '' })
+  refundState?: OrderState;
+
+  @Rule(RuleType.string().allow('').max(50))
+  @ApiProperty({ description: '业务单号', example: '' })
+  bizNo?: string;
+
+  @Rule(RuleType.string().allow('').max(50))
+  @ApiProperty({ description: '商品名称', example: '' })
+  goodsName?: string;
+
+  @Rule(amountRule)
+  @ApiProperty({ description: '最小金额', example: '' })
+  minAmount?: number;
+
+  @Rule(amountRule)
+  @ApiProperty({ description: '最大金额', example: '' })
+  maxAmount?: number;
+}
+
+
+export class CancelOrderDTO {
+  @Rule(RuleType.bool().default(false))
+  @ApiProperty({ description: '是否强制取消订单', example: 'true' })
+  force?: boolean;
 }

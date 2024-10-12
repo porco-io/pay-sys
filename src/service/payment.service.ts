@@ -6,13 +6,13 @@ import {
 } from "../dto/payment.dto";
 import Payment, { paymentScope } from "../models/models/Payment.model";
 import { isNil, omitBy } from "lodash";
-import { v4 } from "uuid";
+import { nanoRandom } from "../utils/cipher";
 
 @Provide()
 export class PaymentService {
   /** 生成支付代号 */
   genPayCode() {
-    const randomId = v4().replace(/-/g, "").slice(0, 8).toUpperCase();
+    const randomId = nanoRandom(8);
     return randomId;
   }
   /** 查询支付方式 - 通过名称 */

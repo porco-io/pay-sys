@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@akashrajpurohit/snowflake-id':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@midwayjs/bootstrap':
         specifier: ^3.18.0
         version: 3.18.0
@@ -171,6 +174,9 @@ packages:
   '@acuminous/bitsyntax@0.1.2':
     resolution: {integrity: sha512-29lUK80d1muEQqiUsSo+3A0yP6CdspgC95EnKBMi22Xlwt79i/En4Vr67+cXhU+cZjbti3TgGGC5wy1stIywVQ==}
     engines: {node: '>=0.8'}
+
+  '@akashrajpurohit/snowflake-id@2.0.0':
+    resolution: {integrity: sha512-9En2OKHBOO39vztHUxHUh/Xh6wTI1lEQ9c0ivr7QX3ozaKgs770TRJrgtBbQBeLLbMoLGG3fBk3otAlSY440pw==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -3343,6 +3349,8 @@ snapshots:
       safe-buffer: 5.1.2
     transitivePeerDependencies:
       - supports-color
+
+  '@akashrajpurohit/snowflake-id@2.0.0': {}
 
   '@ampproject/remapping@2.3.0':
     dependencies:
