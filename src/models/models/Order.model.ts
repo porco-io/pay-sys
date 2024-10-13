@@ -162,6 +162,13 @@ export class Order extends Model<Order> {
   })
   @ApiProperty({ description: '商品名称'})
   goodsName?: string;
+
+  /** 业务名称 */
+  @Column({
+    type: DataType.STRING,
+  })
+  @ApiProperty({ description: '订单业务名称' })
+  bizName?: string;
   
   /** 备注 */
   @Column({
@@ -238,13 +245,6 @@ export class Order extends Model<Order> {
   @ApiProperty({ description: '售后退款金额'})
   refundAmount: number;
 
-  /** 支付方式id */
-  @Column({
-    type: DataType.INTEGER,
-  })
-  @ApiProperty({ description: '支付方式id'})
-  paymentId: number;
-
   /** 支付代码 */
   @Column({
     type: DataType.STRING,
@@ -255,7 +255,8 @@ export class Order extends Model<Order> {
   /** 支付方式 */
   @BelongsTo(() => Payment, {
     constraints: false,
-    foreignKey: 'paymentId',
+    foreignKey: 'paymentCode',
+    targetKey: 'code',
   })
   payment: Payment;
 
@@ -273,6 +274,30 @@ export class Order extends Model<Order> {
   })
   @ApiProperty({ description: '订单取消原因'})
   closeReason?: string;
+
+  @Column({
+    type: DataType.DATE
+  })
+  @ApiProperty({ description: '订单完成时间' })
+  finishTime?: string;
+
+  @Column({
+    type: DataType.DATE
+  })
+  @ApiProperty({ description: '订单关闭时间' })
+  closeTime?: string;
+
+  @Column({
+    type: DataType.DATE
+  })
+  @ApiProperty({ description: '订单支付时间' })
+  payTime?: string;
+
+  @Column({
+    type: DataType.STRING
+  })
+  @ApiProperty({ description: '订单单号' })
+  paySn?: string;
 }
 
 export default Order;

@@ -55,3 +55,16 @@ export enum RefundState {
   /* 已完成 */
   completed = 'completed',
 }
+
+/** 支付状态 */
+enum PayState {
+  /* 已关闭 */
+  closed = 'closed',
+  /** 待支付 */
+  paying = 'paying',
+  /** 支付成功 */
+  success ='success',
+  /** 支付失败 */
+  fail = 'fail',
+}
+export default PayState;

@@ -16,6 +16,10 @@ export class CreateOrderDTO {
   @Rule(amountRule.required())
   amount: number;
 
+  @Rule(RuleType.string().max(15))
+  @ApiProperty({ description: "业务名称" })
+  bizName?: string;
+
   @ApiProperty({ description: "订单名称" })
   @Rule(RuleType.string().required())
   orderName: string;

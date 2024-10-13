@@ -5,6 +5,7 @@ import { apis } from "../api/apis";
 import moment from "moment";
 import { models } from "../models/models";
 import PayOrder from "../models/models/PayOrder.model";
+import { nanoRandom } from "../utils/cipher";
 
 @Provide()
 export class WxService {
@@ -99,71 +100,71 @@ export class WxService {
   //   return payOrder;
   // }
 
-  // /** 微信支付下单： 获取prepay_id */
-  // async wechatPrepay(params: {
-  //   /** 商品描述 */
-  //   description: string;
-  //   /** 支付单 */
-  //   paySn: string;
-  //   /** 过期时间 */
-  //   time_expire: string;
-  //   /** 附加数据 */
-  //   attach: string;
-  //   /** 支付金额 */
-  //   payAmount: number;
-  //   /** openId */
-  //   openid: string;
-  // }) {
-  //   /** 支付回调地址 */
-  //   const payCallback = `${process.env.APP_HOST}/v1/pay/wechatCallback/${params.paySn}`;
-  //   const wxPayParams = {
-  //     mchid: process.env.WX_MCH_ID,
-  //     appid: process.env.WX_APP_ID,
-  //     description: params.description ?? "",
-  //     out_trade_no: params.paySn,
-  //     /* 交易结束时间 */
-  //     time_expire: params.time_expire,
-  //     attach: params.attach ?? "",
-  //     notify_url: payCallback,
-  //     amount: {
-  //       total: params.payAmount || 1,
-  //       currency: "CNY",
-  //     },
-  //     payer: {
-  //       openid: params.openid,
-  //     },
-  //   };
+  /** 微信支付下单： 获取prepay_id */
+  async wechatPrepay(params: {
+    /** 商品描述 */
+    description: string;
+    /** 支付单 */
+    paySn: string;
+    /** 过期时间 */
+    time_expire: string;
+    /** 附加数据 */
+    attach: string;
+    /** 支付金额 */
+    payAmount: number;
+    /** openId */
+    openid: string;
+  }) {
+    /** 支付回调地址 */
+    const payCallback = `${process.env.APP_HOST}/v1/pay/wechatCallback/${params.paySn}`;
+    const wxPayParams = {
+      mchid: process.env.WX_MCH_ID,
+      appid: process.env.WX_APP_ID,
+      description: params.description ?? "",
+      out_trade_no: params.paySn,
+      /* 交易结束时间 */
+      time_expire: params.time_expire,
+      attach: params.attach ?? "",
+      notify_url: payCallback,
+      amount: {
+        total: params.payAmount || 1,
+        currency: "CNY",
+      },
+      payer: {
+        openid: params.openid,
+      },
+    };
 
-  //   const resp = await apis.wxShop.post<{
-  //     prepay_id: string;
-  //     code?: string;
-  //     message?: string;
-  //   }>("/v3/pay/transactions/jsapi", wxPayParams, {
-  //     validateStatus: (status) => status < 500,
-  //   });
-  //   this.logger.info("prepay_id:", resp.data);
-  //   if (!resp.data.prepay_id) {
-  //     throw new Error(`微信下单失败, ${resp.data.message}`);
-  //   }
-  //   return resp.data.prepay_id;
-  // }
+    const resp = await apis.wxShop.post<{
+      prepay_id: string;
+      code?: string;
+      message?: string;
+    }>("/v3/pay/transactions/jsapi", wxPayParams, {
+      validateStatus: (status) => status < 500,
+    });
+    // this.logger.info("prepay_id:", resp.data);
+    if (!resp.data.prepay_id) {
+      throw new httpError.BadRequestError(`微信下单失败, ${resp.data.message}`);
+    }
+    return resp.data.prepay_id;
+  }
 
-  // /** 获取客户端调起支付所需要的参数 */
-  // async getMiniPayParams(prepay_id: string) {
-  //   const timeStamp = Math.round(Date.now() / 1000).toString();
-  //   const payParams = {
-  //     appId: this.ctx.state.miniId,
-  //     timeStamp: timeStamp,
-  //     nonceStr: randomstring.generate(8),
-  //     package: `prepay_id=${prepay_id}`,
-  //     signType: "RSA",
-  //     paySign: "",
-  //   };
+  /** 获取客户端调起支付所需要的参数 */
+  async getMiniPayParams(prepay_id: string) {
+    // const timeStamp = Math.round(Date.now() / 1000).toString();
+    // const payParams = {
+    //   appId: this.ctx.state.miniId,
+    //   timeStamp: timeStamp,
+    //   nonceStr: nanoRandom(8),
+    //   package: `prepay_id=${prepay_id}`,
+    //   signType: "RSA",
+    //   paySign: "",
+    // };
 
-  //   payParams.paySign = getWxPaySign(payParams);
+    // payParams.paySign = getWxPaySign(payParams);
 
-  //   return payParams;
-  // }
+    // return payParams;
+  }
 
   // /** 处理支付成功 */
   // async handlePaySuccess(

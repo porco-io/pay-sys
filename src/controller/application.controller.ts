@@ -3,6 +3,7 @@ import { Context } from '@midwayjs/koa';
 import { LoginRequired } from '../middleware/auth.middleware';
 import { CreateApplicationDTO, QueryAppPageListDTO, SetAppPaymentsDTO, UpdateApplicationDTO } from '../dto/application.dto';
 import { ApplicationService } from '../service/application.service';
+import { GetAppPeymentsDTO } from '../dto/payment.dto';
 
 @Controller('/api/application')
 export class PaymentController {
@@ -40,6 +41,23 @@ export class PaymentController {
       throw new httpError.NotFoundError('应用不存在')
     }
     return app.secret;
+  }
+
+  /** 获取支付方式 */
+  @Get('/:key/payments', {
+    description: '获取应用支付方式',
+    middleware: [
+      LoginRequired
+    ]
+  })
+  async getPayments(@Param('key') key: string, @Queries() params: GetAppPeymentsDTO) {
+    const { includeDisabled } = params;
+    const app = await this.appService.findByKey(key);
+    if (!app) {
+      throw new httpError.NotFoundError('应用不存在')
+    }
+    const payments = await this.appService.getAppPayments(app, includeDisabled);
+    return payments;
   }
 
   /** 获取应用分页列表 */

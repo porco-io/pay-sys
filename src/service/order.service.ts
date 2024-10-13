@@ -8,13 +8,15 @@ import { CreateOrderDTO, QueryOrderPageListDTO } from '../dto/order.dto';
 import luid from 'luid'
 import { OrderState } from '../define/enums';
 import { genSnowflakeId } from '../utils/cipher';
+import { PayOrderService } from './payOrder.service';
 
 @Provide()
 export class OrderService {
   
   @Inject()
   paymentService: PaymentService;
-
+  @Inject()
+  payOrderService: PayOrderService;
   genOrderSn(appId: number) {
     const orderSn = `${appId.toString().padStart(2, 'A')}${genSnowflakeId()}`
     return orderSn;
@@ -48,6 +50,7 @@ export class OrderService {
     const orderSn = this.genOrderSn(app.id);
     const order = await Order.create({
       ...params,
+      bizName: params.bizName || app.name,
       orderSn,
     });
     return order;
@@ -119,8 +122,8 @@ export class OrderService {
         throw new httpError.BadRequestError('订单已关闭');
       case OrderState.init:
       case OrderState.paying: 
-        // TODO: 取消支付单
-
+        // 取消支付单
+        await this.payOrderService.cancelOrdersPayOrder(order.orderSn);
         // 取消订单
         await order.update({ state: OrderState.closed });
         break;
@@ -133,7 +136,8 @@ export class OrderService {
   /** 强制取消订单 */
   async cancelForce(order: Order) {
     await order.update({ state: OrderState.closed });
-    // TODO: 取消支付单
+    //  取消支付单
+    await this.payOrderService.cancelOrdersPayOrder(order.orderSn);
     // TODO: 取消退款单
     return order;
   }

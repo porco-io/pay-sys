@@ -2,6 +2,7 @@ import { BelongsToMany, Column, DataType, HasMany, HasOne, Model, Table } from '
 import { getTableName } from '../tool';
 import { ApiProperty } from '@midwayjs/swagger';
 import { ScopeStore, ScopeType } from '../scope';
+import PayState, { PaymentPlatform } from '../../define/enums';
 // paySn      String    @id @unique @db.VarChar(50)
 // // 退款状态 0.待支付 1. 支付成功  2.支付失败
 // payState   Int       @default(0) @db.TinyInt
@@ -39,11 +40,75 @@ export const payOrderScope = new ScopeStore({
   scopes: payOrderScope.mapOptions()
 })
 export class PayOrder extends Model<PayOrder> {
+  /** 应用KEY */
   @Column({
     type: DataType.STRING,
+    allowNull: false
   })
-  orderId: string;
+  appKey: string;
+
+  /** 订单编号 */
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  orderSn: string;
   
+  /** 支付单号 */
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  paySn: string;
+
+  /** 支付代码 */
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  paymentCode: string;
+
+  @Column({
+    type: DataType.STRING(10),
+    allowNull: false
+  })
+  platform: PaymentPlatform
+
+  /** 支付状态 */
+  @Column({
+    type: DataType.STRING(10),
+    defaultValue: PayState.paying,
+  })
+  state: PayState;
+
+  /** 支付超时时间 */
+  @Column({
+    type: DataType.DATE
+  })
+  @ApiProperty({ description: '支付超时时间' })
+  expireTime?: Date;
+
+  /** 支付单支付时间 */
+  @Column({
+    type: DataType.DATE
+  })
+  @ApiProperty({ description: '支付单支付时间' })
+  payTime?: string;
+
+  /** 支付金额 */
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false
+  })  
+  @ApiProperty({ description: '支付金额 单位分' })
+  amount: number;
+
+  /** 支付标题 */
+  @Column({
+    type: DataType.STRING(40),
+  })  
+  @ApiProperty({ description: '支付标题' })
+  title: string;
 }
 
 export default PayOrder;

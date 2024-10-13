@@ -25,20 +25,23 @@ export class PaymentService {
     return payment;
   }
   /** 查询支付方式 - 通过code */
-  async findByCode(code: string) {
+  async findByCode(code: string, includeDisabled = false) {
     const payment = await Payment.findOne({
       where: {
         code: code,
       },
+      paranoid: !includeDisabled,
     });
     return payment;
   }
 
   /** 查询支付方式数组 - 通过code数组 */
-  async findByCodes(codes: string[]) {
+  async findByCodes(codes: string[], includeDisabled = false) {
     const payments = await Payment.scope([
       paymentScope.method("in_codes", codes),
-    ]).findAll();
+    ]).findAll({
+      paranoid: !includeDisabled,
+    });
     return payments;
   }
   /** 创建支付 */

@@ -1,12 +1,15 @@
-import { Rule, RuleType } from "@midwayjs/validate";
-import { orderSnRule, PaginationDTO } from "./base";
+import { Rule } from "@midwayjs/validate";
+import { orderSnRule, payCodeRule } from "./base";
 import { ApiProperty } from "@midwayjs/swagger";
-import { PaymentPlatform } from "../define/enums";
 
 
 /**  创建支付单DTO */
 export class CreatePayOrderDTO {
-  @Rule(orderSnRule.required())
-  @ApiProperty({ description: '订单号', example: '1N00M24ZSEJE7683RQHEEC2PU' })
-  orderSn: string;
+  @Rule(payCodeRule)
+  @ApiProperty({ description: '支付代码(应用只绑定一种支付方式时可以不传)', example: 'u4dUATGG' })
+  payCode?: string;
+
+  @Rule(payCodeRule)
+  @ApiProperty({ description: '支付标题, 一般是订单的业务名称, 比如：充值', example: '充值' })
+  title?: string;
 }

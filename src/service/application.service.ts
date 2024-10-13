@@ -12,18 +12,19 @@ export class ApplicationService {
 
   /** 获取app */
   async findById(id: number) {
-    const payment = await Application.findByPk(id);
-    return payment;
+    const app = await Application.findByPk(id);
+    return app;
   }
 
   /** 获取app */
   async findByKey(key: string) {
-    const payment = await Application.findOne({
+    const app = await Application.findOne({
       where: {
         key: key,
       },
     });
-    return payment;
+
+    return app;
   }
   /** 创建 */
   async create(params: CreateApplicationDTO) {
@@ -81,7 +82,7 @@ export class ApplicationService {
       return app;
     }
     const uniqCodes = uniq(paymentCodes);
-    const payments = await this.paymentService.findByCodes(uniqCodes);
+    const payments = await this.paymentService.findByCodes(uniqCodes, false);
     if (uniqCodes.length !== payments.length) {
       throw new httpError.NotFoundError('支付方式不存在, 请检查支付代码是否正确');
     }
@@ -94,5 +95,36 @@ export class ApplicationService {
       return pm.update({ appKeys: uniq(pm.appKeys.concat(app.key)) })
     }))
     return app;
+  }
+
+  async getAppPayments(app: Application, includeDisabled = false) {
+    const payments = await this.paymentService.findByCodes(app.paymentCodes, includeDisabled);
+    return payments;
+  }
+
+  async getValidPayments(app: Application) {
+    const payments = await this.paymentService.findByCodes(app.paymentCodes);
+    return payments;
+  }
+  async getValidPayment(app: Application, payCode?: string) {
+    if (payCode) {
+      if (!app.paymentCodes.includes(payCode)) {
+        throw new httpError.ForbiddenError(`不支持该支付方式[${payCode}]`);
+      }
+      const targetPayment = await this.paymentService.findByCode(payCode);
+      if (!targetPayment) {
+        throw new httpError.NotFoundError('支付方式不存在或已禁用');
+      }
+      return targetPayment;
+    } else {
+      const payments = await this.paymentService.findByCodes(app.paymentCodes);
+      if (payments.length === 0) {
+        throw new httpError.ForbiddenError('应用未配置支付方式');
+      }
+      if (payments.length !== 1) {
+        throw new httpError.ForbiddenError('请指定一种支付方式');
+      }
+      return payments[0];
+    }
   }
 }

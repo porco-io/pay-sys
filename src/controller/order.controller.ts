@@ -8,13 +8,14 @@ import {
   Patch,
   Param,
   Body,
-  Del,
 } from "@midwayjs/core";
 import { Context } from "@midwayjs/koa";
 import { LoginRequired } from "../middleware/auth.middleware";
 import { CancelOrderDTO, CreateOrderDTO, QueryOrderPageListDTO } from "../dto/order.dto";
 import { OrderService } from "../service/order.service";
 import { CreatePayOrderDTO } from "../dto/payOrder.dto";
+import { PayOrderService } from "../service/payOrder.service";
+import { ApplicationService } from "../service/application.service";
 
 @Controller("/api/order")
 export class OrderController {
@@ -23,6 +24,12 @@ export class OrderController {
 
   @Inject()
   orderService: OrderService;
+
+  @Inject()
+  appService: ApplicationService;
+
+  @Inject()
+  payOrderService: PayOrderService;
 
   /** 创建订单 */
   @Post("/", {
@@ -36,7 +43,7 @@ export class OrderController {
 
 
   /** 创建订单支付单 */
-  @Post("/:orderSn/payment", {
+  @Post("/:orderSn/payOrder", {
     description: "创建订单支付单",
     middleware: [LoginRequired],
   })
@@ -46,7 +53,8 @@ export class OrderController {
     if (!order) {
       throw new httpError.NotFoundError("订单不存在");
     }
-    // const payOrder = await this
+
+    const payOrder = await this.payOrderService.findOrCreatePayOrder(order, params);
     return payOrder;
   }
 
@@ -57,7 +65,7 @@ export class OrderController {
   })
   async detail(@Param("orderSn") orderSn: string) {
     const order = await this.orderService.findBySn(orderSn);
-    const payment = order.paymentId
+    const payment = order.paymentCode
       ? await order.$get("payment", {
           attributes: ["id", "code", "name", "icon"],
         })

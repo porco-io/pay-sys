@@ -12,14 +12,11 @@ export class PayOrderController {
   @Inject()
   paymentService: PaymentService;
 
-  // 创建支付单
-  @Post('/', {
-    description: '创建支付单'
-  })
-  async create(@Body() params: CreatePayOrderDTO) {
-    const { orderSn } = params;
-  }
-
- 
-  
+  // // 创建支付单
+  // @Post('/', {
+  //   description: '创建支付单'
+  // })
+  // async create(@Body() params: CreatePayOrderDTO) {
+  //   const { orderSn } = params;
+  // }
 }

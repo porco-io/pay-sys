@@ -3,6 +3,7 @@ import { getTableName } from '../tool';
 import { ApiProperty } from '@midwayjs/swagger';
 import { ScopeStore, ScopeType } from '../scope';
 import { nanoRandom } from '../../utils/cipher';
+import { PaymentPlatform } from '../../define/enums';
 
 export const paymentScope = new ScopeStore({
   eq_name: {
@@ -76,7 +77,7 @@ export class Payment extends Model<Payment> {
     type: DataType.STRING,
   })
   @ApiProperty({ description: '平台'})
-  platform: string;
+  platform: PaymentPlatform;
 
   @Column({
     type: DataType.STRING,
