@@ -26,6 +26,22 @@ declare module IStruct {
     /** 数据列表 */
     list: T[],
   }
+
+  /** 微信支付回调结果 */
+  interface WxPayCbResult {
+    id: string,
+    create_time: string,
+    resource_type: string,
+    event_type: string,
+    summary: string,
+    resource: {
+      original_type: string,
+      algorithm: string,
+      ciphertext: string,
+      associated_data: string,
+      nonce: string
+    }
+  }
 }
 
 type HttpResp<T> = {

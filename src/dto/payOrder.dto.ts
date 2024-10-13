@@ -1,4 +1,4 @@
-import { Rule } from "@midwayjs/validate";
+import { Rule, RuleType } from "@midwayjs/validate";
 import { orderSnRule, payCodeRule } from "./base";
 import { ApiProperty } from "@midwayjs/swagger";
 
@@ -12,4 +12,26 @@ export class CreatePayOrderDTO {
   @Rule(payCodeRule)
   @ApiProperty({ description: '支付标题, 一般是订单的业务名称, 比如：充值', example: '充值' })
   title?: string;
+}
+
+/** 微信支付回调参数 */
+export class WxPayCallbackDTO {
+  @Rule(RuleType.string().allow(''))
+  id: string;
+  @Rule(RuleType.string().allow(''))
+  create_time: string;
+  @Rule(RuleType.string().allow(''))
+  resource_type: string;
+  @Rule(RuleType.string().allow(''))
+  event_type: string;
+  @Rule(RuleType.string().allow(''))
+  summary: string;
+  @Rule(RuleType.object())
+  resource: {
+    original_type: string;
+    algorithm: string;
+    ciphertext: string;
+    associated_data: string;
+    nonce: string
+  }
 }
