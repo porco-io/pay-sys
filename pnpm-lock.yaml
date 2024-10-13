@@ -126,6 +126,9 @@ importers:
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.7
+      '@types/mime':
+        specifier: '3'
+        version: 3.0.4
       '@types/mocha':
         specifier: ^10.0.8
         version: 10.0.8
@@ -717,6 +720,9 @@ packages:
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
+
+  '@types/mime@3.0.4':
+    resolution: {integrity: sha512-iJt33IQnVRkqeqC7PzBHPTC6fDlRNRW8vjrgqtScAhrmMwe8c4Eo7+fUGTa+XdWrpEgpyKWMYmi2dIwMAYRzPw==}
 
   '@types/minimist@1.2.5':
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
@@ -4086,6 +4092,8 @@ snapshots:
   '@types/lodash@4.17.7': {}
 
   '@types/mime@1.3.5': {}
+
+  '@types/mime@3.0.4': {}
 
   '@types/minimist@1.2.5': {}
 
