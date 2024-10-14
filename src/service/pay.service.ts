@@ -24,7 +24,7 @@ export class PayService {
   @Inject()
   orderService: OrderService;
 
-  @Logger('mqLogger')
+  @Logger()
   logger: ILogger;
 
   /** 生成支付代号 */
@@ -76,10 +76,10 @@ export class PayService {
   async findOrCreatePayOrder(order: Order, params: CreatePayOrderDTO) {
     const { title, payCode } = params;
     if (order.state === OrderState.closed) {
-      throw new httpError.ConflictError("创建支付单失败，订单已关闭");
+      throw new httpError.ConflictError("发起支付失败，订单已关闭");
     }
     if (order.state !== OrderState.init && order.state !== OrderState.paying) {
-      throw new httpError.ConflictError("创建支付单失败，订单已支付");
+      throw new httpError.ConflictError("发起支付失败，订单已支付");
     }
     /** 订单关联应用 */
     const app = await this.appService.findByKey(order.appKey);
@@ -99,14 +99,14 @@ export class PayService {
     if (curValidPayOrder) {
       return curValidPayOrder;
     }
-
+    const expireTime = moment().add(PAY_EXPIRE_LIMIT, "millisecond").toISOString();
     // 创建支付单
     const payOrder = await PayOrder.create({
       appKey: order.appKey,
       orderSn: order.orderSn,
       paySn: this.genPaySn(app.id),
       paymentCode: validPayment.code,
-      expireTime: moment().add(PAY_EXPIRE_LIMIT, "millisecond").toISOString(),
+      expireTime: expireTime,
       amount: order.amount,
       platform: validPayment.platform,
       title: title || order.bizName || app.name,

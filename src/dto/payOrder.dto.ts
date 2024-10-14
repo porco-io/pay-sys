@@ -1,8 +1,16 @@
-import { Rule, RuleType } from "@midwayjs/validate";
+import { getSchema, Rule, RuleType } from "@midwayjs/validate";
 import { orderSnRule, payCodeRule } from "./base";
 import { ApiProperty } from "@midwayjs/swagger";
 
+class WxPayParamsDTO {
+  @Rule(RuleType.string().max(50).required())
+  openId: string;
+}
 
+class AliPayPayParamsDTO {
+  // @Rule(RuleType.string().max(50).required())
+  // openId2: string;
+}
 /**  创建支付单DTO */
 export class CreatePayOrderDTO {
   @Rule(payCodeRule)
@@ -12,6 +20,12 @@ export class CreatePayOrderDTO {
   @Rule(payCodeRule)
   @ApiProperty({ description: '支付标题, 一般是订单的业务名称, 比如：充值', example: '充值' })
   title?: string;
+
+  @Rule(RuleType.string().max(50).required())
+  userId: string;
+  /** 支付参数 */
+  @Rule(RuleType.alternatives([getSchema(WxPayParamsDTO)]))
+  payParams: WxPayParamsDTO | AliPayPayParamsDTO;
 }
 
 /** 微信支付回调参数 */

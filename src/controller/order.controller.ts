@@ -8,6 +8,8 @@ import {
   Patch,
   Param,
   Body,
+  Logger,
+  ILogger,
 } from "@midwayjs/core";
 import { Context } from "@midwayjs/koa";
 import { LoginRequired } from "../middleware/auth.middleware";
@@ -31,6 +33,9 @@ export class OrderController {
   @Inject()
   payService: PayService;
 
+  @Logger()
+  logger: ILogger;
+
   /** 创建订单 */
   @Post("/", {
     description: "创建订单",
@@ -42,12 +47,15 @@ export class OrderController {
   }
 
 
-  /** 创建订单支付单 */
-  @Post("/:orderSn/payOrder", {
-    description: "创建订单支付单",
+  /** 发起订单支付 */
+  @Post("/:orderSn/pay", {
+    description: "发起订单支付",
     middleware: [LoginRequired],
   })
   async createPayOrder(@Param("orderSn") orderSn: string, @Body() params: CreatePayOrderDTO) {
+    // 
+    // const order = await this.orderService.create(params);
+    this.logger.debug('params: ', params);
     // const order = await this.orderService.create(params);
     const order = await this.orderService.findBySn(orderSn);
     if (!order) {

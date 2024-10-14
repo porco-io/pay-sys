@@ -2,8 +2,8 @@ import { MidwayConfig } from '@midwayjs/core';
 import { LoggerInfo, LoggerOptions } from '@midwayjs/logger';
 
 
-const logFormat = (info: LoggerInfo) => {
-  return `${info.timestamp} ${info.LEVEL} [midway:mq] ${info.message}`;
+const logFormat = (name: string) => (info: LoggerInfo) => {
+  return `${info.timestamp} ${info.LEVEL} [midway:${name}] ${info.message}`;
 };
 
 export default () => { 
@@ -32,15 +32,15 @@ export default () => {
   midwayLogger: {
     clients: {
       coreLogger: {
-        format: logFormat,
+        format: logFormat('core'),
       },
       appLogger: {
-        format: logFormat,
+        format: logFormat('app'),
       },
       mqLogger: {
         level: 'info',
         aliasName: 'mqLogger',
-        format: logFormat,
+        format: logFormat('mq'),
         transports: {
           console: {
             level: 'info'
