@@ -163,7 +163,7 @@ export class WxService {
   }
 
   /** 获取客户端调起支付所需要的参数 */
-  async getMiniPayParams(miniId: string, prepay_id: string) {
+  async getMiniPayParams(miniId: string, prepay_id: string, pem: string) {
     const timeStamp = Math.round(Date.now() / 1000).toString();
     const payParams = {
       appId: miniId,
@@ -172,8 +172,8 @@ export class WxService {
       package: `prepay_id=${prepay_id}`,
       signType: "RSA",
       paySign: "",
+      pem: pem,
     };
-
     payParams.paySign = getWxPaySign(payParams);
 
     return payParams;

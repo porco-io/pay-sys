@@ -3,15 +3,15 @@ import { execSync } from "child_process";
 import { readFileSync } from "fs";
 import { join } from "path";
 import { hextob64, KJUR } from 'jsrsasign';
-import crypto from 'crypto';
 // import Qrcode from 'qrcode';
 // import randomstring from 'crypto-random-string';
 import randomstring from 'random-string';
 import { apis } from "../api/apis";
 
+
 /** 商户支付证书路径 */
-const wxApiClientLicensePath = join(appRootPath.path, 'libs/wx_test_key.pem');
-const wxClientApiPrivateKey = readFileSync(wxApiClientLicensePath, { encoding: 'utf-8' });
+// const wxApiClientLicensePath = join(appRootPath.path, 'libs/wx_apiclient_key.pem');
+// const wxClientApiPrivateKey = readFileSync(wxApiClientLicensePath, { encoding: 'utf-8' });
 
 /** 解析base64格式json对象 */
 export const resolveBase64json = <T = any>(base64Str: string): T | void => {
@@ -49,15 +49,24 @@ export const getWxPaySign = (params: {
   appId: string,
   timeStamp: string,
   nonceStr: string,
-  package: string
+  package: string,
+  pem: string
 }) => {
-  const result = execSync(`echo -n -e \
- "${params.appId}\n${params.timeStamp}\n${params.nonceStr}\n${params.package}\n" \
-   | openssl dgst -sha256 -sign ${wxApiClientLicensePath} \
-   | openssl base64 -A`, {
-    encoding: 'utf-8'
-  });
-  return result;
+  const signStr = `${params.appId}\n${params.timeStamp}\n${params.nonceStr}\n${params.package}\n`;
+  const sig = new KJUR.crypto.Signature({ alg: 'SHA256withRSA' });
+  sig.init(params.pem);
+  sig.updateString(signStr);
+  const signature = sig.sign();
+  // 将签名转换为 Base64 格式
+  const base64Signature = hextob64(signature);
+  return base64Signature;
+//   const result = execSync(`echo -n -e \
+//  "${params.appId}\n${params.timeStamp}\n${params.nonceStr}\n${params.package}\n" \
+//    | openssl dgst -sha256 -sign ${wxApiClientLicensePath} \
+//    | openssl base64 -A`, {
+//     encoding: 'utf-8'
+//   });
+//   return result;
 }
 
 
@@ -118,25 +127,25 @@ export const getWxShopAuthorization = (params: {
 }
 
 /** 解密微信支付报文 */
-export const decipherWxCallback = (ciphertext: string, nouce: string) => {
-  const decipher = crypto.createDecipheriv('aes-256-gcm', process.env.WX_MCH_V3_KEY, nouce);
-  const cipherBuffer = Buffer.from(ciphertext, 'base64');
-  const authTag = cipherBuffer.subarray(-16);
-  const dataBuffer = cipherBuffer.subarray(0, -16);
-  decipher.setAuthTag(authTag);
-  const decrypted = decipher.update(dataBuffer.toString('base64'), 'base64', 'utf-8');
-  return decrypted;
-}
+// export const decipherWxCallback = (ciphertext: string, nouce: string) => {
+//   const decipher = crypto.createDecipheriv('aes-256-gcm', process.env.WX_MCH_V3_KEY, nouce);
+//   const cipherBuffer = Buffer.from(ciphertext, 'base64');
+//   const authTag = cipherBuffer.subarray(-16);
+//   const dataBuffer = cipherBuffer.subarray(0, -16);
+//   decipher.setAuthTag(authTag);
+//   const decrypted = decipher.update(dataBuffer.toString('base64'), 'base64', 'utf-8');
+//   return decrypted;
+// }
 
-/** 加密微信商户信息 */
-export const encipherWxShopMessage = (content?: string, publicKey?: string) => {
-  if (!content || !publicKey) return '';
-  // 对明文进行加密
-  const encrypted = crypto.publicEncrypt({
-    key: publicKey,
-    padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-    oaepHash: 'sha1',
-  }, Buffer.from(content));
+// /** 加密微信商户信息 */
+// export const encipherWxShopMessage = (content?: string, publicKey?: string) => {
+//   if (!content || !publicKey) return '';
+//   // 对明文进行加密
+//   const encrypted = crypto.publicEncrypt({
+//     key: publicKey,
+//     padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+//     oaepHash: 'sha1',
+//   }, Buffer.from(content));
 
-  return encrypted.toString('base64');
-}
+//   return encrypted.toString('base64');
+// }

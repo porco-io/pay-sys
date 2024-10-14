@@ -206,7 +206,7 @@ export class PayService {
         if (!prepayId) {
           throw new httpError.BadRequestError("微信下单失败");
         }
-        return this.wxService.getMiniPayParams(paymentConfig.APP_ID, prepayId);
+        return this.wxService.getMiniPayParams(paymentConfig.APP_ID, prepayId, paymentConfig.MCH_KEY_PEM);
       }
       default:
         throw new httpError.ForbiddenError(
