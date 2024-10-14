@@ -14,7 +14,7 @@ import { LoginRequired } from "../middleware/auth.middleware";
 import { CancelOrderDTO, CreateOrderDTO, QueryOrderPageListDTO } from "../dto/order.dto";
 import { OrderService } from "../service/order.service";
 import { CreatePayOrderDTO } from "../dto/payOrder.dto";
-import { PayOrderService } from "../service/payOrder.service";
+import {  PayService } from "../service/pay.service";
 import { ApplicationService } from "../service/application.service";
 
 @Controller("/api/order")
@@ -29,7 +29,7 @@ export class OrderController {
   appService: ApplicationService;
 
   @Inject()
-  payOrderService: PayOrderService;
+  payService: PayService;
 
   /** 创建订单 */
   @Post("/", {
@@ -54,7 +54,7 @@ export class OrderController {
       throw new httpError.NotFoundError("订单不存在");
     }
 
-    const payOrder = await this.payOrderService.findOrCreatePayOrder(order, params);
+    const payOrder = await this.payService.findOrCreatePayOrder(order, params);
     return payOrder;
   }
 

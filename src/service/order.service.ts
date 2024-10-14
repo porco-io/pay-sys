@@ -8,7 +8,7 @@ import { CreateOrderDTO, QueryOrderPageListDTO } from '../dto/order.dto';
 import luid from 'luid'
 import { OrderState } from '../define/enums';
 import { genSnowflakeId } from '../utils/cipher';
-import { PayOrderService } from './payOrder.service';
+import { PayService } from './pay.service';
 
 @Provide()
 export class OrderService {
@@ -16,7 +16,8 @@ export class OrderService {
   @Inject()
   paymentService: PaymentService;
   @Inject()
-  payOrderService: PayOrderService;
+  payServer: PayService;
+
   genOrderSn(appId: number) {
     const orderSn = `${appId.toString().padStart(2, 'A')}${genSnowflakeId()}`
     return orderSn;
@@ -123,7 +124,7 @@ export class OrderService {
       case OrderState.init:
       case OrderState.paying: 
         // 取消支付单
-        await this.payOrderService.cancelOrdersPayOrder(order.orderSn);
+        await this.payServer.cancelOrdersPayOrder(order.orderSn);
         // 取消订单
         await order.update({ state: OrderState.closed });
         break;
@@ -137,8 +138,8 @@ export class OrderService {
   async cancelForce(order: Order) {
     await order.update({ state: OrderState.closed });
     //  取消支付单
-    await this.payOrderService.cancelOrdersPayOrder(order.orderSn);
-    // TODO: 取消退款单
+    await this.payServer.cancelOrdersPayOrder(order.orderSn);
+    // TODO: 取消退款单  -- 暂不支持退款
     return order;
   }
 }

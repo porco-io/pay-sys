@@ -86,7 +86,7 @@ export class PayOrder extends Model<PayOrder> {
     type: DataType.DATE
   })
   @ApiProperty({ description: '支付超时时间' })
-  expireTime?: Date;
+  expireTime?: string;
 
   /** 支付单支付时间 */
   @Column({
@@ -109,6 +109,13 @@ export class PayOrder extends Model<PayOrder> {
   })  
   @ApiProperty({ description: '支付标题' })
   title: string;
+
+  /** 失败原因 */
+  @Column({
+    type: DataType.STRING,
+  })  
+  @ApiProperty({ description: '失败原因' })
+  failReason?: string;
 }
 
 export default PayOrder;

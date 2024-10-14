@@ -1,4 +1,4 @@
-import { Inject, Provide, httpError } from "@midwayjs/core";
+import { ILogger, Inject, Logger, Provide, httpError } from "@midwayjs/core";
 import { genSnowflakeId, nanoRandom } from "../utils/cipher";
 import Order from "../models/models/Order.model";
 import PayState, { OrderState, PaymentPlatform } from "../define/enums";
@@ -7,16 +7,25 @@ import { Op } from "sequelize";
 import { ApplicationService } from "./application.service";
 import moment from "moment";
 import { PAY_EXPIRE_LIMIT } from "../define/consts";
-import { CreatePayOrderDTO } from "../dto/payOrder.dto";
+import { CreatePayOrderDTO, WxPayCallbackDTO } from "../dto/payOrder.dto";
 import { WxService } from "./wx.service";
+import { OrderService } from "./order.service";
+import { MidwayLogger } from "@midwayjs/logger";
 
 @Provide()
-export class PayOrderService {
+export class PayService {
   @Inject()
   appService: ApplicationService;
 
   @Inject()
   wxService: WxService;
+
+
+  @Inject()
+  orderService: OrderService;
+
+  @Logger('mqLogger')
+  logger: ILogger;
 
   /** 生成支付代号 */
   genPaySn(appId: number) {
@@ -97,7 +106,7 @@ export class PayOrderService {
       orderSn: order.orderSn,
       paySn: this.genPaySn(app.id),
       paymentCode: validPayment.code,
-      expireTime: moment().add(PAY_EXPIRE_LIMIT, "millisecond").toDate(),
+      expireTime: moment().add(PAY_EXPIRE_LIMIT, "millisecond").toISOString(),
       amount: order.amount,
       platform: validPayment.platform,
       title: title || order.bizName || app.name,
@@ -168,6 +177,25 @@ export class PayOrderService {
         throw new httpError.ForbiddenError(
           `支付方式(${payOrder.platform})不支持`
         );
+    }
+  }
+
+
+  async handleWxPayCallback(payOrder: PayOrder, callbackData: WxPayCallbackDTO) {
+    const isSuccess = callbackData.event_type === 'TRANSACTION.SUCCESS';
+    if (!isSuccess) {
+      this.logger.info(`微信支付回调，订单号:${payOrder.orderSn}, 支付单号:${payOrder.paySn}, 支付状态:${callbackData.event_type}, 失败原因:${callbackData.summary}`)
+      await payOrder.update({
+        state: PayState.fail,
+        failReason: callbackData.summary
+      });
+    } else {
+      await payOrder.update({
+        state: PayState.success,
+      });
+      // TODO: 处理订单流转下一步状态
+      // TODO：将消息发到mq上，
+      
     }
   }
 }

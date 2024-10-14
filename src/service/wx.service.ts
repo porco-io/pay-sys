@@ -116,7 +116,7 @@ export class WxService {
     openid: string;
   }) {
     /** 支付回调地址 */
-    const payCallback = `${process.env.APP_HOST}/v1/pay/wechatCallback/${params.paySn}`;
+    const payCallback = `${process.env.APP_HOST}/v1/pay/wxCallback/${params.paySn}`;
     const wxPayParams = {
       mchid: process.env.WX_MCH_ID,
       appid: process.env.WX_APP_ID,
