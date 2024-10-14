@@ -1,7 +1,7 @@
-import appRootPath from "app-root-path";
-import { execSync } from "child_process";
-import { readFileSync } from "fs";
-import { join } from "path";
+// import appRootPath from "app-root-path";
+// import { execSync } from "child_process";
+// import { readFileSync } from "fs";
+// import { join } from "path";
 import { hextob64, KJUR } from 'jsrsasign';
 // import Qrcode from 'qrcode';
 // import randomstring from 'crypto-random-string';
