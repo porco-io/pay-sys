@@ -13,10 +13,14 @@ import {
 } from "@midwayjs/core";
 import { Context } from "@midwayjs/koa";
 import { LoginRequired } from "../middleware/auth.middleware";
-import { CancelOrderDTO, CreateOrderDTO, QueryOrderPageListDTO } from "../dto/order.dto";
+import {
+  CancelOrderDTO,
+  CreateOrderDTO,
+  QueryOrderPageListDTO,
+} from "../dto/order.dto";
 import { OrderService } from "../service/order.service";
 import { CreatePayOrderDTO } from "../dto/payOrder.dto";
-import {  PayService } from "../service/pay.service";
+import { PayService } from "../service/pay.service";
 import { ApplicationService } from "../service/application.service";
 
 @Controller("/api/order")
@@ -46,23 +50,31 @@ export class OrderController {
     return order;
   }
 
-
   /** 发起订单支付 */
   @Post("/:orderSn/pay", {
     description: "发起订单支付",
     middleware: [LoginRequired],
   })
-  async createPayOrder(@Param("orderSn") orderSn: string, @Body() params: CreatePayOrderDTO) {
-    // 
+  async createPayOrder(
+    @Param("orderSn") orderSn: string,
+    @Body() params: CreatePayOrderDTO
+  ) {
+    //
     // const order = await this.orderService.create(params);
-    this.logger.debug('params: ', params);
+    this.logger.debug("params: ", params);
     // const order = await this.orderService.create(params);
     const order = await this.orderService.findBySn(orderSn);
     if (!order) {
       throw new httpError.NotFoundError("订单不存在");
     }
 
-    const payOrder = await this.payService.findOrCreatePayOrder(order, params);
+    const payOrder = await this.payService.findOrCreatePayOrder(
+      order,
+      params
+    );
+    if (payOrder.payment) {
+      payOrder.payment.secured();
+    }
     return payOrder;
   }
 
@@ -92,7 +104,6 @@ export class OrderController {
     return pageData;
   }
 
-  
   // /** 更新订单部分信息 */
   // @Patch('/:orderSn', {
   //   description: '创建订单',
@@ -109,18 +120,20 @@ export class OrderController {
     description: "取消订单",
     middleware: [LoginRequired],
   })
-  async cancel(@Param("orderSn") orderSn: string, @Body() params: CancelOrderDTO) {
+  async cancel(
+    @Param("orderSn") orderSn: string,
+    @Body() params: CancelOrderDTO
+  ) {
     const order = await this.orderService.findBySn(orderSn);
     if (!order) {
       throw new httpError.NotFoundError("订单不存在");
     }
     if (params.force) {
-      await this.orderService.cancelForce(order)
+      await this.orderService.cancelForce(order);
     } else {
-      await this.orderService.cancel(order)
+      await this.orderService.cancel(order);
     }
 
     return true;
   }
-
 }

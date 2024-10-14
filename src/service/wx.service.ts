@@ -6,9 +6,11 @@ import moment from "moment";
 import { models } from "../models/models";
 import PayOrder from "../models/models/PayOrder.model";
 import { nanoRandom } from "../utils/cipher";
+import { AxiosRequestConfig } from "axios";
 
 @Provide()
 export class WxService {
+  async checkPayParams() {}
   // /** 通过支付单号查找 */
   // async findByPaySn(paySn: string) {
   //   return PayOrder.({
@@ -106,6 +108,8 @@ export class WxService {
     description: string;
     /** 支付单 */
     paySn: string;
+    /** 内部订单号 */
+    orderSn: string;
     /** 过期时间 */
     time_expire: string;
     /** 附加数据 */
@@ -114,14 +118,18 @@ export class WxService {
     payAmount: number;
     /** openId */
     openid: string;
+    appId: string;
+    mchId: string;
+    serialNo: string;
+    pem: string;
   }) {
     /** 支付回调地址 */
     const payCallback = `${process.env.APP_HOST}/v1/pay/wxCallback/${params.paySn}`;
     const wxPayParams = {
-      mchid: process.env.WX_MCH_ID,
-      appid: process.env.WX_APP_ID,
+      mchid: params.mchId,
+      appid: params.appId,
       description: params.description ?? "",
-      out_trade_no: params.paySn,
+      out_trade_no: params.orderSn,
       /* 交易结束时间 */
       time_expire: params.time_expire,
       attach: params.attach ?? "",
@@ -141,7 +149,12 @@ export class WxService {
       message?: string;
     }>("/v3/pay/transactions/jsapi", wxPayParams, {
       validateStatus: (status) => status < 500,
-    });
+      states: {
+        mchId: params.mchId,
+        serialNo: params.serialNo,
+        pem: params.pem,
+      }
+    } as AxiosRequestConfig & { states: { [key: string]: string } });
     // this.logger.info("prepay_id:", resp.data);
     if (!resp.data.prepay_id) {
       throw new httpError.BadRequestError(`微信下单失败, ${resp.data.message}`);
@@ -150,20 +163,20 @@ export class WxService {
   }
 
   /** 获取客户端调起支付所需要的参数 */
-  async getMiniPayParams(prepay_id: string) {
-    // const timeStamp = Math.round(Date.now() / 1000).toString();
-    // const payParams = {
-    //   appId: this.ctx.state.miniId,
-    //   timeStamp: timeStamp,
-    //   nonceStr: nanoRandom(8),
-    //   package: `prepay_id=${prepay_id}`,
-    //   signType: "RSA",
-    //   paySign: "",
-    // };
+  async getMiniPayParams(miniId: string, prepay_id: string) {
+    const timeStamp = Math.round(Date.now() / 1000).toString();
+    const payParams = {
+      appId: miniId,
+      timeStamp: timeStamp,
+      nonceStr: nanoRandom(8),
+      package: `prepay_id=${prepay_id}`,
+      signType: "RSA",
+      paySign: "",
+    };
 
-    // payParams.paySign = getWxPaySign(payParams);
+    payParams.paySign = getWxPaySign(payParams);
 
-    // return payParams;
+    return payParams;
   }
 
   // /** 处理支付成功 */

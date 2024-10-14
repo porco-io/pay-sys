@@ -11,6 +11,7 @@ import { CreatePayOrderDTO, WxPayCallbackDTO } from "../dto/payOrder.dto";
 import { WxService } from "./wx.service";
 import { OrderService } from "./order.service";
 import { MidwayLogger } from "@midwayjs/logger";
+import Payment from "../models/models/Payment.model";
 
 @Provide()
 export class PayService {
@@ -19,7 +20,6 @@ export class PayService {
 
   @Inject()
   wxService: WxService;
-
 
   @Inject()
   orderService: OrderService;
@@ -55,8 +55,15 @@ export class PayService {
         state: PayState.paying,
       },
       order: [["id", "desc"]],
+      include: [
+        {
+          model: Payment,
+          attributes: ["id", "code", "name", "icon"],
+        },
+      ],
     });
   }
+
   /** 取消订单的所有支付单 */
   async cancelOrdersPayOrder(orderSn: string) {
     return PayOrder.update(
@@ -99,7 +106,9 @@ export class PayService {
     if (curValidPayOrder) {
       return curValidPayOrder;
     }
-    const expireTime = moment().add(PAY_EXPIRE_LIMIT, "millisecond").toISOString();
+    const expireTime = moment()
+      .add(PAY_EXPIRE_LIMIT, "millisecond")
+      .toISOString();
     // 创建支付单
     const payOrder = await PayOrder.create({
       appKey: order.appKey,
@@ -110,6 +119,7 @@ export class PayService {
       amount: order.amount,
       platform: validPayment.platform,
       title: title || order.bizName || app.name,
+      payParams: params.payParams,
     });
 
     await order.update({
@@ -117,7 +127,14 @@ export class PayService {
       paySn: payOrder.paySn,
       state: OrderState.paying,
     });
-
+    await payOrder.reload({
+      include: [
+        {
+          model: Payment,
+          attributes: ["id", "code", "name", "icon"],
+        },
+      ],
+    });
     return payOrder;
   }
 
@@ -155,23 +172,41 @@ export class PayService {
   }
 
   async getPayParams(payOrder: PayOrder) {
+    if (!payOrder.payment) {
+      await payOrder.reload({
+        include: [Payment],
+      });
+    }
+    const paymentConfig = (payOrder.payment.details ?? {}) as IStruct.WxPayConfig;
     switch (payOrder.platform) {
       case PaymentPlatform.wechat: {
+        if (!paymentConfig.MCH_ID) {
+          throw new httpError.BadRequestError(
+            "微信支付参数错误, 请检查支付配置"
+          );
+        }
+        if (!payOrder.payParams.openId) {
+          throw new httpError.BadRequestError("微信支付参数错误, 缺少OpenId");
+        }
         // 前端调起支付需要的参数
         /** 微信下单 */
         const prepayId = await this.wxService.wechatPrepay({
           description: payOrder.title,
           paySn: payOrder.paySn,
+          orderSn: payOrder.orderSn,
           time_expire: moment(payOrder.expireTime).toISOString(),
           attach: "",
           payAmount: payOrder.amount,
-          // TODO: openid
-          openid: "",
+          openid: payOrder.payParams.openId,
+          appId: paymentConfig.APP_ID,
+          mchId: paymentConfig.MCH_ID,
+          serialNo: paymentConfig.MCH_SERIAL_NO,
+          pem: paymentConfig.MCH_KEY_PEM,
         });
         if (!prepayId) {
-          throw new httpError.BadRequestError("微信支付下单失败");
+          throw new httpError.BadRequestError("微信下单失败");
         }
-        return this.wxService.getMiniPayParams(prepayId);
+        return this.wxService.getMiniPayParams(paymentConfig.APP_ID, prepayId);
       }
       default:
         throw new httpError.ForbiddenError(
@@ -180,14 +215,18 @@ export class PayService {
     }
   }
 
-
-  async handleWxPayCallback(payOrder: PayOrder, callbackData: WxPayCallbackDTO) {
-    const isSuccess = callbackData.event_type === 'TRANSACTION.SUCCESS';
+  async handleWxPayCallback(
+    payOrder: PayOrder,
+    callbackData: WxPayCallbackDTO
+  ) {
+    const isSuccess = callbackData.event_type === "TRANSACTION.SUCCESS";
     if (!isSuccess) {
-      this.logger.info(`微信支付回调，订单号:${payOrder.orderSn}, 支付单号:${payOrder.paySn}, 支付状态:${callbackData.event_type}, 失败原因:${callbackData.summary}`)
+      this.logger.info(
+        `微信支付回调，订单号:${payOrder.orderSn}, 支付单号:${payOrder.paySn}, 支付状态:${callbackData.event_type}, 失败原因:${callbackData.summary}`
+      );
       await payOrder.update({
         state: PayState.fail,
-        failReason: callbackData.summary
+        failReason: callbackData.summary,
       });
     } else {
       await payOrder.update({
@@ -195,7 +234,6 @@ export class PayService {
       });
       // TODO: 处理订单流转下一步状态
       // TODO：将消息发到mq上，
-      
     }
   }
 }

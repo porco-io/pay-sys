@@ -21,13 +21,14 @@ const wxShop = axios.create({
 })
 
 wxShop.interceptors.request.use((config) => {
-  
   const headerAuthorization = getWxShopAuthorization({
     body: config.data,
     method: config.method?.toUpperCase() ?? '',
     url: config.url!,
+    mchId: config['states']?.['mchId'],
+    serialNo: config['states']?.['serialNo'],
+    pem: config['states']?.['pem'],
   });
-
   config.headers.concat({
     ...(config.headers ?? {}),
     Authorization: headerAuthorization

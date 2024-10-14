@@ -5,6 +5,7 @@ import { PaymentService } from '../service/payment.service';
 import { WxPayCallbackDTO } from '../dto/payOrder.dto';
 import { PayService } from '../service/pay.service';
 import { MidwayLogger } from '@midwayjs/logger';
+import PayState from '../define/enums';
 
 @Controller('/api/pay')
 export class PayController {
@@ -14,10 +15,27 @@ export class PayController {
   @Inject()
   logger: MidwayLogger
 
-  @Inject()
-  paymentService: PaymentService;
+
   @Inject()
   payService: PayService;
+
+  // 获取支付参数
+  @Get('/:paySn/payParams', {
+    description: '获取支付参数',
+  })
+  async getPayParams(@Param('paySn') paySn: string) {
+    const payOrder = await this.payService.findByPaySn(paySn);
+    if (!payOrder) {
+      throw new httpError.BadRequestError('支付单不存在');
+    }
+    /// 如果不是正在支付的支付单，则抛错
+    const stateErrMsg = payOrder.matchState(PayState.paying);
+    if (stateErrMsg) {
+      throw new httpError.ConflictError(stateErrMsg);
+    }
+    const payParams = await this.payService.getPayParams(payOrder);
+    return payParams;
+  }
 
   // 微信支付回调
   @Post('/wxCallback/:paySn', {
@@ -37,4 +55,5 @@ export class PayController {
     }
     return true;
   }
+
 }

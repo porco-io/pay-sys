@@ -21,9 +21,7 @@ export class CreatePayOrderDTO {
   @ApiProperty({ description: '支付标题, 一般是订单的业务名称, 比如：充值', example: '充值' })
   title?: string;
 
-  @Rule(RuleType.string().max(50).required())
-  userId: string;
-  /** 支付参数 */
+  /** 支付参数，比如微信支付 需要用户的openId */
   @Rule(RuleType.alternatives([getSchema(WxPayParamsDTO)]))
   payParams: WxPayParamsDTO | AliPayPayParamsDTO;
 }

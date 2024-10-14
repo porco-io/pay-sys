@@ -86,10 +86,16 @@ export class Payment extends Model<Payment> {
   account: string;
 
   @Column({
-    type: DataType.JSON
+    type: DataType.JSON,
+    defaultValue: () => ({})
   })
   @ApiProperty({ description: '支付方式详情'})
   details: Record<string, any>;
+
+  secured() {
+    this.setDataValue('details', undefined)
+    return this;
+  }
 }
 
 export default Payment;

@@ -42,6 +42,15 @@ declare module IStruct {
       nonce: string
     }
   }
+
+
+  interface WxPayConfig {
+    APP_ID: string,
+    MCH_ID: string,
+    MCH_V3_KEY: string,
+    MCH_SERIAL_NO: string,
+    MCH_KEY_PEM: string,
+  }
 }
 
 type HttpResp<T> = {

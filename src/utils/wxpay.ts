@@ -10,7 +10,7 @@ import randomstring from 'random-string';
 import { apis } from "../api/apis";
 
 /** 商户支付证书路径 */
-const wxApiClientLicensePath = join(appRootPath.path, 'libs/wx_apiclient_key.pem');
+const wxApiClientLicensePath = join(appRootPath.path, 'libs/wx_test_key.pem');
 const wxClientApiPrivateKey = readFileSync(wxApiClientLicensePath, { encoding: 'utf-8' });
 
 /** 解析base64格式json对象 */
@@ -40,6 +40,11 @@ export function getWxAccessToken() {
 
 
 /** 计算微信支付sign */
+// HTTP请求方法\n
+// URL\n
+// 请求时间戳\n
+// 请求随机串\n
+// 请求报文主体\n
 export const getWxPaySign = (params: {
   appId: string,
   timeStamp: string,
@@ -66,17 +71,19 @@ export const getWxPaySign = (params: {
  * 签名值signature
 */
 export const getWxShopApiSign = (params: {
+  mchId: string,
   method: string,
   url: string,
   timestamp: string,
   nonce_str: string,
-  body?: Record<string, any>
+  body?: Record<string, any>,
+  pem: string;
 }) => {
   const paramStr = `${params.method}\n${params.url}\n${params.timestamp}\n${params.nonce_str}\n${params.body ? JSON.stringify(params.body) : ''}\n`;
   const sign = new KJUR.crypto.Signature({
     alg: 'SHA256withRSA'
   });
-  sign.init(wxClientApiPrivateKey, process.env.WX_MCH_ID);
+  sign.init(params.pem, params.mchId);
   return hextob64(sign.signString(paramStr));
 }
 
@@ -85,9 +92,10 @@ export const getWxShopAuthorization = (params: {
   method: string,
   url: string,
   body?: Record<string, any>,
+  mchId: string,
+  serialNo: string,
+  pem: string;
 }) => {
-  const mchid = process.env.WX_MCH_ID;
-  const serial_no = process.env.WX_MCH_SERIAL_NO;
   const algo = 'WECHATPAY2-SHA256-RSA2048';
   const timestamp = Math.round(Date.now() / 1000);
   const nonce_str = randomstring({
@@ -97,14 +105,16 @@ export const getWxShopAuthorization = (params: {
     special: false,
   }).toUpperCase();
   const signature = getWxShopApiSign({
-    method: params.method,
+    method: params.method.toUpperCase(),
     url: params.url,
     timestamp: timestamp.toString(),
     nonce_str: nonce_str,
     body: params.body,
+    mchId: params.mchId,
+    pem: params.pem,
   });
 
-  return `${algo} mchid="${mchid}",nonce_str="${nonce_str}",signature="${signature}",timestamp="${timestamp}",serial_no="${serial_no}"`
+  return `${algo} mchid="${params.mchId}",nonce_str="${nonce_str}",signature="${signature}",timestamp="${timestamp}",serial_no="${params.serialNo}"`
 }
 
 /** 解密微信支付报文 */

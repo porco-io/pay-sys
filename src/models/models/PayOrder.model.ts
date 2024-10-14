@@ -1,8 +1,9 @@
-import { BelongsToMany, Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript'
+import { BelongsTo, BelongsToMany, Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript'
 import { getTableName } from '../tool';
 import { ApiProperty } from '@midwayjs/swagger';
 import { ScopeStore, ScopeType } from '../scope';
 import PayState, { PaymentPlatform } from '../../define/enums';
+import Payment from './Payment.model';
 // paySn      String    @id @unique @db.VarChar(50)
 // // 退款状态 0.待支付 1. 支付成功  2.支付失败
 // payState   Int       @default(0) @db.TinyInt
@@ -40,6 +41,32 @@ export const payOrderScope = new ScopeStore({
   scopes: payOrderScope.mapOptions()
 })
 export class PayOrder extends Model<PayOrder> {
+
+  get isExpired() {
+    return this.expireTime && new Date(this.expireTime) < new Date();
+  }
+
+  matchState(state: PayState) {
+    const isMatched = this.state === state;
+    if (isMatched) {
+      return;
+    }
+    switch (this.state) {
+      case PayState.closed: {
+        return '支付单已关闭';
+      }
+      case PayState.success: {
+        return '支付单已支付成功';
+      }
+      case PayState.fail: {
+        return '支付单支付失败';
+      }
+      default: {
+        return `支付状态不存在 - ${state}`;
+      }
+    }
+  }
+
   /** 应用KEY */
   @Column({
     type: DataType.STRING,
@@ -67,6 +94,13 @@ export class PayOrder extends Model<PayOrder> {
     allowNull: false
   })
   paymentCode: string;
+
+  @BelongsTo(() => Payment, {
+    constraints: false,
+    foreignKey: 'paymentCode',
+    targetKey: 'code',
+  })
+  payment: Payment;
 
   @Column({
     type: DataType.STRING(10),
@@ -116,6 +150,16 @@ export class PayOrder extends Model<PayOrder> {
   })  
   @ApiProperty({ description: '失败原因' })
   failReason?: string;
+
+  /** 
+   * 支付方式所需的支付参数 - 支付参数
+   * 例如：比如微信支付 需要用户的openId
+   */
+  @Column({
+    type: DataType.JSON,
+    defaultValue: () => ({})
+  })
+  payParams: Record<string, any>;
 }
 
 export default PayOrder;

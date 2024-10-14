@@ -76,6 +76,7 @@ podman run -d \
   -e RABBITMQ_DEFAULT_PASS=123456z! \
   docker.io/rabbitmq:3-management
 ```
+启动后登录后台管理添加一个vHost，名称是: "/hipo"
 
 - Use `npm run lint` to check code style.
 - Use `npm test` to run unit test.
