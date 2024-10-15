@@ -1,5 +1,6 @@
 import { MidwayConfig } from '@midwayjs/core';
 import { LoggerInfo, LoggerOptions } from '@midwayjs/logger';
+import { createRedisStore } from '@midwayjs/cache-manager';
 
 
 const logFormat = (name: string) => (info: LoggerInfo) => {
@@ -28,6 +29,20 @@ export default () => {
     validationOptions: {
       stripUnknown: true
     }
+  },
+  cacheManager: {
+    clients: {
+      memory: {
+        store: 'memory',
+        options: {
+          max: 300,
+          ttl: 3000,
+        },
+      },
+      redis: {
+        store: createRedisStore('default'),
+      },
+    },
   },
   midwayLogger: {
     clients: {

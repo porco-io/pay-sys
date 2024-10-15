@@ -43,13 +43,22 @@ declare module IStruct {
     }
   }
 
-
+  /** 微信商户配置 */
   interface WxPayConfig {
-    APP_ID: string,
+    // APP_ID: string,
     MCH_ID: string,
     MCH_V3_KEY: string,
     MCH_SERIAL_NO: string,
     MCH_KEY_PEM: string,
+  }
+
+  interface WxMiniPayInvokeParams {
+    appId: string,
+    timeStamp: string,
+    nonceStr: string,
+    package: string,
+    signType: "RSA",
+    paySign: string,
   }
 }
 

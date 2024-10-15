@@ -14,6 +14,9 @@ importers:
       '@midwayjs/bootstrap':
         specifier: ^3.18.0
         version: 3.18.0
+      '@midwayjs/cache-manager':
+        specifier: ^3.18.2
+        version: 3.18.2
       '@midwayjs/core':
         specifier: ^3.18.0
         version: 3.18.0
@@ -513,6 +516,10 @@ packages:
   '@midwayjs/bootstrap@3.18.0':
     resolution: {integrity: sha512-6DVowwvYIJUy14Zbieg2BrYOqnTASdOG5SsDRNLDob0XFbCgjTA43CwfJXvu3SBAlgRy7Osc8ggD8mXNAsC+cw==}
     engines: {node: '>=12.11.0'}
+
+  '@midwayjs/cache-manager@3.18.2':
+    resolution: {integrity: sha512-6bNtLtf41jsvkKKO81mmNnttpXdXAW4d+paPxkMlXY9xrcXPILg3XOEhVzpvDmVAnlVuvpuSJ6CwsQLoqUuINw==}
+    engines: {node: '>=12'}
 
   '@midwayjs/cookies@1.2.0':
     resolution: {integrity: sha512-gdfAXk3+uL+9qcNo9lNnUFJCUGXXxCitBjyz9QJR08dcZ11mqTbxVNXhea525e3ZwKREy6f4PHAWofFwlPOZzQ==}
@@ -2200,6 +2207,9 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
+  lodash.clonedeep@4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
+
   lodash.defaults@4.2.0:
     resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
 
@@ -2264,6 +2274,10 @@ packages:
   lru-cache@6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
+
+  lru-cache@7.18.3:
+    resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
+    engines: {node: '>=12'}
 
   luid@1.0.3:
     resolution: {integrity: sha512-/Qj80WFl0cbuYXpUeXumQ0qXlZQHY9Ql0vqzjVl9UofxjGbFnL4hYcqWh6WFKZy3CnP88AivWwHw8UyMqkyBEQ==}
@@ -3842,6 +3856,11 @@ snapshots:
     dependencies:
       '@midwayjs/async-hooks-context-manager': 3.18.0
       '@midwayjs/event-bus': 1.10.0
+
+  '@midwayjs/cache-manager@3.18.2':
+    dependencies:
+      lodash.clonedeep: 4.5.0
+      lru-cache: 7.18.3
 
   '@midwayjs/cookies@1.2.0':
     dependencies:
@@ -5845,6 +5864,8 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
+  lodash.clonedeep@4.5.0: {}
+
   lodash.defaults@4.2.0: {}
 
   lodash.includes@4.3.0: {}
@@ -5899,6 +5920,8 @@ snapshots:
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
+
+  lru-cache@7.18.3: {}
 
   luid@1.0.3: {}
 

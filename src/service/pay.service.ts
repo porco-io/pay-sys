@@ -1,17 +1,18 @@
 import { ILogger, Inject, Logger, Provide, httpError } from "@midwayjs/core";
 import { genSnowflakeId, nanoRandom } from "../utils/cipher";
 import Order from "../models/models/Order.model";
-import PayState, { OrderState, PaymentPlatform } from "../define/enums";
+import PayState, { OrderState, PaymentPlatform, PaymentType } from "../define/enums";
 import PayOrder from "../models/models/PayOrder.model";
 import { Op } from "sequelize";
 import { ApplicationService } from "./application.service";
 import moment from "moment";
 import { PAY_EXPIRE_LIMIT } from "../define/consts";
-import { CreatePayOrderDTO, WxPayCallbackDTO } from "../dto/payOrder.dto";
+import { CreatePayOrderDTO, WxPayCallbackDTO, WxPayParamsDTO } from "../dto/payOrder.dto";
 import { WxService } from "./wx.service";
 import { OrderService } from "./order.service";
 import { MidwayLogger } from "@midwayjs/logger";
 import Payment from "../models/models/Payment.model";
+import { WxPayUtil } from "../utils/wxpay";
 
 @Provide()
 export class PayService {
@@ -104,6 +105,9 @@ export class PayService {
       validPayment.code
     );
     if (curValidPayOrder) {
+      await curValidPayOrder.update({
+        payParams: params.payParams,
+      });
       return curValidPayOrder;
     }
     const expireTime = moment()
@@ -177,37 +181,11 @@ export class PayService {
         include: [Payment],
       });
     }
-    const paymentConfig = (payOrder.payment.details ?? {}) as IStruct.WxPayConfig;
+    const paymentConfig = (payOrder.payment.details ?? {});
     switch (payOrder.platform) {
       case PaymentPlatform.wechat: {
-        if (!paymentConfig.MCH_ID) {
-          throw new httpError.BadRequestError(
-            "微信支付参数错误, 请检查支付配置"
-          );
-        }
-        if (!payOrder.payParams.openId) {
-          throw new httpError.BadRequestError("微信支付参数错误, 缺少OpenId");
-        }
-        // 前端调起支付需要的参数
-        /** 微信下单 */
-        const prepayId = await this.wxService.wechatPrepay({
-          description: payOrder.title,
-          paySn: payOrder.paySn,
-          orderSn: payOrder.orderSn,
-          time_expire: moment(payOrder.expireTime).toISOString(),
-          attach: "",
-          payAmount: payOrder.amount,
-          openid: payOrder.payParams.openId,
-          appId: paymentConfig.APP_ID,
-          mchId: paymentConfig.MCH_ID,
-          serialNo: paymentConfig.MCH_SERIAL_NO,
-          pem: paymentConfig.MCH_KEY_PEM,
-        });
-        if (!prepayId) {
-          throw new httpError.BadRequestError("微信下单失败");
-        }
-        return this.wxService.getMiniPayParams(paymentConfig.APP_ID, prepayId, paymentConfig.MCH_KEY_PEM);
-      }
+        return this.wxService.getWxPayParams(payOrder, paymentConfig as IStruct.WxPayConfig);
+      } break;
       default:
         throw new httpError.ForbiddenError(
           `支付方式(${payOrder.platform})不支持`

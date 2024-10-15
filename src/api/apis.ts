@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { getWxShopAuthorization } from '../utils/wxpay';
 import { storage } from '../utils/storage';
 
@@ -20,21 +20,19 @@ const wxShop = axios.create({
   baseURL: process.env.WX_MCH_API
 })
 
-wxShop.interceptors.request.use((config) => {
-  const headerAuthorization = getWxShopAuthorization({
-    body: config.data,
-    method: config.method?.toUpperCase() ?? '',
-    url: config.url!,
-    mchId: config['states']?.['mchId'],
-    serialNo: config['states']?.['serialNo'],
-    pem: config['states']?.['pem'],
-  });
-  config.headers = config.headers.concat({
-    ...(config.headers ?? {}),
-    Authorization: headerAuthorization
-  });
-  return config;
-})
+// wxShop.interceptors.request.use((config) => {
+//   // const headerAuthorization = getWxShopAuthorization({
+//   //   body: config.data,
+//   //   method: config.method?.toUpperCase() ?? '',
+//   //   url: config.url!,
+//   //   mchId: config['states']?.['mchId'],
+//   //   serialNo: config['states']?.['serialNo'],
+//   //   pem: config['states']?.['pem'],
+//   // });
+//   config.headers = config.headers.concat({
+//     ...(config.headers ?? {}),
+//   });
+//   return config;
 
 /** 高德地图api */
 const amap = axios.create({

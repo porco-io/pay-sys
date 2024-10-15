@@ -1,13 +1,23 @@
 import { getSchema, Rule, RuleType } from "@midwayjs/validate";
 import { orderSnRule, payCodeRule } from "./base";
 import { ApiProperty } from "@midwayjs/swagger";
+import { PaymentType } from "../define/enums";
 
-class WxPayParamsDTO {
-  @Rule(RuleType.string().max(50).required())
-  openId: string;
+export class WxPayParamsDTO {
+  @Rule(RuleType.string().max(50))
+  @ApiProperty({ description: '用户openId，小程序和jsapi支付需要，用户的openId在每一个app中都不一样', example: 'oKuyD64Jz7mpuocREnh78ei64r74' })
+  openId?: string;
+
+  @Rule(RuleType.string().max(50))
+  @ApiProperty({ description: 'appId', example: 's3w341dfgewrwe12' })
+  appId?: string;
+
+  @Rule(RuleType.string().equal(...Object.values(PaymentType)).required())
+  @ApiProperty({ description: '支付代码(应用只绑定一种支付方式时可以不传)', example: 'u4dUATGG' })
+  payType: PaymentType;
 }
 
-class AliPayPayParamsDTO {
+export class AliPayPayParamsDTO {
   // @Rule(RuleType.string().max(50).required())
   // openId2: string;
 }
@@ -22,7 +32,7 @@ export class CreatePayOrderDTO {
   title?: string;
 
   /** 支付参数，比如微信支付 需要用户的openId */
-  @Rule(RuleType.alternatives([getSchema(WxPayParamsDTO)]))
+  @Rule(RuleType.alternatives([getSchema(WxPayParamsDTO)]).required())
   payParams: WxPayParamsDTO | AliPayPayParamsDTO;
 }
 

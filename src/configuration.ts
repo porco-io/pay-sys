@@ -24,6 +24,7 @@ import { ReportMiddleware } from './middleware/report.middleware.js';
 import * as sequelize from '@midwayjs/sequelize';
 import * as redis from '@midwayjs/redis';
 import * as crossDomain from '@midwayjs/cross-domain';
+import * as cacheManager from '@midwayjs/cache-manager';
 
 import { Sequelize } from 'sequelize-typescript';
 import { initAdminUser } from './models/setup';
@@ -41,6 +42,7 @@ import { AuthMiddleware } from './middleware/auth.middleware';
     jwt,
     i18n,
     swagger,
+    cacheManager,
     {
       component: rabbitmq,
       enabledEnvironment: ['local', 'dev', 'development', 'production'],

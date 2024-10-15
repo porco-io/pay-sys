@@ -6,6 +6,7 @@
   "dependencies": {
     "@akashrajpurohit/snowflake-id": "^2.0.0",
     "@midwayjs/bootstrap": "^3.18.0",
+    "@midwayjs/cache-manager": "^3.18.2",
     "@midwayjs/core": "^3.18.0",
     "@midwayjs/cross-domain": "^3.18.0",
     "@midwayjs/i18n": "^3.18.0",

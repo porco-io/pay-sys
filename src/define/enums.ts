@@ -26,6 +26,15 @@ export const paymentPlatformCn = {
   [PaymentPlatform.alipay]: "支付宝",
 };
 
+/** 支付形态 */
+export enum PaymentType {
+  h5 = "h5",
+  app = "app",
+  mini = "mini",
+  native = "native",
+  jsapi = "jsapi",
+}
+
 /** 订单状态 */
 export enum OrderState {
   /* 初始化 */
