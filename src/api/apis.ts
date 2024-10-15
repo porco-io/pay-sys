@@ -29,11 +29,10 @@ wxShop.interceptors.request.use((config) => {
     serialNo: config['states']?.['serialNo'],
     pem: config['states']?.['pem'],
   });
-  config.headers.concat({
+  config.headers = config.headers.concat({
     ...(config.headers ?? {}),
     Authorization: headerAuthorization
   });
-
   return config;
 })
 

@@ -1,4 +1,4 @@
-import nanoid from "nanoid";
+import { customAlphabet } from "nanoid";
 import { SnowflakeId } from "@akashrajpurohit/snowflake-id";
 
 const snowflake = SnowflakeId({
@@ -8,7 +8,7 @@ const nanoAlphabet =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 export function nanoRandom(size: number = 24) {
-  return nanoid.customAlphabet(nanoAlphabet, size)();
+  return customAlphabet(nanoAlphabet, size)();
 }
 
 export function genSnowflakeId() {

@@ -1,4 +1,4 @@
-import { Inject, Provide, httpError } from '@midwayjs/core';
+import { ILogger, Inject, Logger, Provide, httpError } from '@midwayjs/core';
 import { models } from '../models/models';
 import { SigninDTO, SignupDTO } from '../dto/auth.dto';
 import { generatePassword, genSalt, validatePassword } from '../utils/helper';
@@ -11,6 +11,9 @@ export class UserService {
 
   @Inject()
   jwtService: JwtService;
+
+  @Logger()
+  logger: ILogger;
 
   /** 注册 */
   async signup(params: SignupDTO) {
@@ -45,7 +48,6 @@ export class UserService {
       username,
       password,
     } = params;
-    console.log(username, password)
     const userInfo = await models.User.findOne({
       where: {
         username,
@@ -69,7 +71,7 @@ export class UserService {
       jwtid: JwtKeyid.user,
       noTimestamp: true,
     });
-    console.log(this.jwtService.decodeSync(token))
+    this.logger.info('登录成功: ', JSON.stringify(userCacheObj));
     return {
       ...omit(userInfo.toJSON(), ['salt', 'password']),
       token

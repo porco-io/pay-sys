@@ -153,6 +153,9 @@ export class WxService {
         mchId: params.mchId,
         serialNo: params.serialNo,
         pem: params.pem,
+      },
+      headers: {
+        'Accept': 'application/json'
       }
     } as AxiosRequestConfig & { states: { [key: string]: string } });
     // this.logger.info("prepay_id:", resp.data);

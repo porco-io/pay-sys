@@ -1,7 +1,7 @@
-// import appRootPath from "app-root-path";
+import appRootPath from "app-root-path";
 // import { execSync } from "child_process";
-// import { readFileSync } from "fs";
-// import { join } from "path";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { hextob64, KJUR } from 'jsrsasign';
 // import Qrcode from 'qrcode';
 // import randomstring from 'crypto-random-string';
@@ -10,8 +10,8 @@ import { apis } from "../api/apis";
 
 
 /** 商户支付证书路径 */
-// const wxApiClientLicensePath = join(appRootPath.path, 'libs/wx_apiclient_key.pem');
-// const wxClientApiPrivateKey = readFileSync(wxApiClientLicensePath, { encoding: 'utf-8' });
+const wxApiClientLicensePath = join(appRootPath.path, 'libs/wx_apiclient_key.pem');
+const wxClientApiPrivateKey = readFileSync(wxApiClientLicensePath, { encoding: 'utf-8' });
 
 /** 解析base64格式json对象 */
 export const resolveBase64json = <T = any>(base64Str: string): T | void => {
@@ -54,7 +54,7 @@ export const getWxPaySign = (params: {
 }) => {
   const signStr = `${params.appId}\n${params.timeStamp}\n${params.nonceStr}\n${params.package}\n`;
   const sig = new KJUR.crypto.Signature({ alg: 'SHA256withRSA' });
-  sig.init(params.pem);
+  sig.init(wxClientApiPrivateKey);
   sig.updateString(signStr);
   const signature = sig.sign();
   // 将签名转换为 Base64 格式
@@ -92,7 +92,7 @@ export const getWxShopApiSign = (params: {
   const sign = new KJUR.crypto.Signature({
     alg: 'SHA256withRSA'
   });
-  sign.init(params.pem, params.mchId);
+  sign.init(wxClientApiPrivateKey, params.mchId);
   return hextob64(sign.signString(paramStr));
 }
 
