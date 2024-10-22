@@ -64,6 +64,7 @@ export class ApplicationService {
     ]).findAndCountAll({
       offset: (page - 1) * size,
       limit: size,
+      order: [['id', 'asc']]
     });
 
     return {
@@ -106,12 +107,12 @@ export class ApplicationService {
     const payments = await this.paymentService.findByCodes(app.paymentCodes);
     return payments;
   }
-  async getValidPayment(app: Application, payCode?: string) {
-    if (payCode) {
-      if (!app.paymentCodes.includes(payCode)) {
-        throw new httpError.ForbiddenError(`不支持该支付方式[${payCode}]`);
+  async getValidPayment(app: Application, paymentCode?: string) {
+    if (paymentCode) {
+      if (!app.paymentCodes.includes(paymentCode)) {
+        throw new httpError.ForbiddenError(`不支持该支付方式[${paymentCode}]`);
       }
-      const targetPayment = await this.paymentService.findByCode(payCode);
+      const targetPayment = await this.paymentService.findByCode(paymentCode);
       if (!targetPayment) {
         throw new httpError.NotFoundError('支付方式不存在或已禁用');
       }

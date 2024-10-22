@@ -1,20 +1,20 @@
 import { Inject, Controller, Get, Query, Post, Body, Patch, httpError, Param, Del } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
-import { UserService } from '../service/user.service';
-import { PaymentService } from '../service/payment.service';
-import { WxPayCallbackDTO } from '../dto/payOrder.dto';
+import { WxPayCallbackDTO } from '../dto/pay.dto';
 import { PayService } from '../service/pay.service';
 import { MidwayLogger } from '@midwayjs/logger';
-import PayState from '../define/enums';
+import { PayState } from '../define/enums';
+import { LoginRequired } from '../middleware/auth.middleware';
 
-@Controller('/api/pay')
+@Controller('/api/pay', {
+  middleware: [LoginRequired]
+})
 export class PayController {
   @Inject()
   ctx: Context;
 
   @Inject()
   logger: MidwayLogger
-
 
   @Inject()
   payService: PayService;
@@ -30,7 +30,7 @@ export class PayController {
     }
     /// 如果不是正在支付的支付单，则抛错
     const stateErrMsg = payOrder.matchState(PayState.paying);
-    if (stateErrMsg) {
+    if (stateErrMsg !== true) {
       throw new httpError.ConflictError(stateErrMsg);
     }
     const payParams = await this.payService.getPayParams(payOrder);

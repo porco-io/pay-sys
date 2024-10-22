@@ -11,6 +11,10 @@ export class PaginationDTO {
   size: number;
 }
 
+export const stringNil = RuleType.string().allow(null, '');
+export const numberNil = RuleType.number().allow(null);
+export const integerNil = RuleType.number().integer().allow(null);
+
 /** id验证规则 */
 export const IDRule = RuleType.number().integer().min(1);
 export const KeyRule = RuleType.string().min(6);
@@ -24,5 +28,6 @@ export const phoneNumberRule = RuleType.string().pattern(/^1[3-9]\d{9}$/);
 /** 金额验证规则 */
 export const amountRule = RuleType.number().integer().min(0).max(100000000);
 
-export const orderSnRule = RuleType.string().pattern(/^[0-9A]{2,3}\d{18,}$/);
-export const payCodeRule = RuleType.string().trim().length(8);
+export const orderSnRule = RuleType.string().pattern(/^A?\d{1,2}\d{18}$/);
+export const paySnRule = RuleType.string().pattern(/^A?\d{1,2}\d{18}\w{2,}$/);
+export const paymentCodeRule = RuleType.string().trim().length(8);

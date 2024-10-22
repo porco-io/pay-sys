@@ -1,12 +1,12 @@
 import { Rule, RuleType } from "@midwayjs/validate";
-import { PaginationDTO } from "./base";
+import { PaginationDTO, stringNil } from "./base";
 import { ApiProperty } from "@midwayjs/swagger";
 import { PaymentPlatform } from "../define/enums";
 
 
 /**  创建支付方式DTO */
 export class CreatePaymentDTO {
-  @Rule(RuleType.string().max(15).min(1).trim().required())
+  @Rule(RuleType.string().trim().max(15).required())
   @ApiProperty({ description: '支付名称', example: '微信支付' })
   name: string
 
@@ -14,15 +14,15 @@ export class CreatePaymentDTO {
   @ApiProperty({ description: '支付平台', example: PaymentPlatform.wechat })
   platform: PaymentPlatform
 
-  @Rule(RuleType.string().trim().allow(''))
+  @Rule(stringNil.trim())
   @ApiProperty({ description: '账号', example: 'abc' })
   account?: string
 
-  @Rule(RuleType.string().trim())
+  @Rule(stringNil.trim())
   @ApiProperty({ description: 'icon' })
   icon?: string
 
-  @Rule(RuleType.string().trim().allow(''))
+  @Rule(stringNil.trim())
   @ApiProperty({ description: '描述', example: '应用支付' })
   desc?: string
 
@@ -37,19 +37,19 @@ export class CreatePaymentDTO {
 
 /**  创建支付方式DTO */
 export class UpdatePaymentDTO {
-  @Rule(RuleType.string().max(15).trim().min(1))
+  @Rule(stringNil.trim().min(1))
   @ApiProperty({ description: '支付名称', example: '微信支付' })
   name?: string
 
-  @Rule(RuleType.string().trim().allow(''))
+  @Rule(stringNil.trim().allow(''))
   @ApiProperty({ description: '账号', example: 'abc' })
   account?: string
 
-  @Rule(RuleType.string().trim())
+  @Rule(stringNil.trim())
   @ApiProperty({ description: 'icon' })
   icon?: string
 
-  @Rule(RuleType.string().trim().allow(''))
+  @Rule(stringNil.trim().allow(''))
   @ApiProperty({ description: '描述', example: '应用支付' })
   desc?: string
 
@@ -66,14 +66,14 @@ export class UpdatePaymentDTO {
 
 /**  查询支付方式列表DTO */
 export class QueryPaymentPageListDTO extends PaginationDTO {
-  @Rule(RuleType.string().allow('').max(30))
+  @Rule(stringNil.max(30))
   @ApiProperty({ description: '支付名称', example: '微信支付' })
   name?: string;
 
-  @Rule(RuleType.string().allow('').max(30))
+  @Rule(stringNil.max(30))
   platform?: string;
 
-  @Rule(RuleType.string().allow(''))
+  @Rule(stringNil.trim())
   @ApiProperty({ description: 'appKey' })
   appKey?: string
 

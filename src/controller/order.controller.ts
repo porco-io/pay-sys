@@ -19,7 +19,7 @@ import {
   QueryOrderPageListDTO,
 } from "../dto/order.dto";
 import { OrderService } from "../service/order.service";
-import { CreatePayOrderDTO } from "../dto/payOrder.dto";
+import { CreatePayOrderDTO } from "../dto/pay.dto";
 import { PayService } from "../service/pay.service";
 import { ApplicationService } from "../service/application.service";
 

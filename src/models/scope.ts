@@ -33,7 +33,7 @@ type ScopeTypeHandlers = {
   [ScopeType.in]: ScopeFindOption<any[]>;
   [ScopeType.attrs]: ScopeFindOption<string[]>;
   [ScopeType.order]: ScopeFindOption<string[]| string>;
-  [ScopeType.custom]: () => null;
+  [ScopeType.custom]: (...params: any[]) => ScopeFindOption;
 };
 // FindOptions<TAttributes> | ((...args: readonly any[]) => FindOptions<TAttributes>
 const scopeHandlers: {
@@ -200,14 +200,14 @@ const scopeHandlers: {
       return {};
     }
   },
-  [ScopeType.custom]: () => null
+  [ScopeType.custom]: (...params: any[]) => null
 } as const;
 
 
 type ScopeDefine<T extends ScopeType = ScopeType> =  {
   type: T;
   prop?: string;
-  scope?: FindOptions;
+  scope?: FindOptions | ((...params: any[]) => FindOptions);
 };
 
 export class ScopeStore<M extends Record<string, ScopeDefine>> {
@@ -222,7 +222,14 @@ export class ScopeStore<M extends Record<string, ScopeDefine>> {
     key: S,
     ...params: Parameters<ScopeTypeHandlers[M[S]['type']]>
   ): ScopeOptions | string {
-    if (this.map[key].type === ScopeType.custom) {
+    const mapOption = this.map[key];
+    const { scope, type} = mapOption;
+    if (type === ScopeType.custom) {
+      if (typeof scope === 'function') {
+        return {
+          method: [key as string, ...params],
+        }
+      }
       return key as string;
     }
     
