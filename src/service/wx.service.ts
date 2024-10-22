@@ -10,7 +10,7 @@ import { AxiosRequestConfig } from "axios";
 import { Caching } from "@midwayjs/cache-manager";
 import Payment from "../models/models/Payment.model";
 import { PaymentType } from "../define/enums";
-import { WxPayParamsDTO } from "../dto/payOrder.dto";
+import { WxPayParamsDTO } from "../dto/pay.dto";
 
 @Provide()
 export class WxService {

@@ -7,7 +7,7 @@ import { Op } from "sequelize";
 import { ApplicationService } from "./application.service";
 import moment from "moment";
 import { PAY_EXPIRE_LIMIT } from "../define/consts";
-import { CreatePayOrderDTO, WxPayCallbackDTO, WxPayParamsDTO } from "../dto/payOrder.dto";
+import { CreatePayOrderDTO, WxPayCallbackDTO, WxPayParamsDTO } from "../dto/pay.dto";
 import { WxService } from "./wx.service";
 import { OrderService } from "./order.service";
 import { MidwayLogger } from "@midwayjs/logger";
@@ -82,7 +82,7 @@ export class PayService {
 
   /** 创建支付单 */
   async findOrCreatePayOrder(order: Order, params: CreatePayOrderDTO) {
-    const { title, payCode } = params;
+    const { title, paymentCode } = params;
     if (order.state === OrderState.closed) {
       throw new httpError.ConflictError("发起支付失败，订单已关闭");
     }
@@ -95,7 +95,7 @@ export class PayService {
       throw new httpError.BadRequestError("应用不存在");
     }
     /** 可用的支付方式 */
-    const validPayment = await this.appService.getValidPayment(app, payCode);
+    const validPayment = await this.appService.getValidPayment(app, paymentCode);
     if (!validPayment) {
       throw new httpError.BadRequestError("支付方式无效或不存在");
     }

@@ -1,59 +1,62 @@
-import { getSchema, Rule, RuleType } from "@midwayjs/validate";
-import { orderSnRule, payCodeRule } from "./base";
+import { Rule, RuleType } from "@midwayjs/validate";
+import { orderSnRule, PaginationDTO, paymentCodeRule, paySnRule, stringNil } from "./base";
 import { ApiProperty } from "@midwayjs/swagger";
-import { PaymentType } from "../define/enums";
+import PayState from "../define/enums";
 
-export class WxPayParamsDTO {
+export class QueryPayOrderPageListDTO extends PaginationDTO {
+  @Rule(stringNil.max(30))
+  @ApiProperty({ description: '支付名称', example: '微信支付' })
+  name?: string;
+
+  @Rule(stringNil.max(30))
+  platform?: string;
+
+  @Rule(stringNil.trim())
+  @ApiProperty({ description: 'appKey' })
+  appKey?: string
+
+  @Rule(paymentCodeRule)
+  @ApiProperty({ description: '支付方式' })
+  paymentCode?: string;
+
+  @Rule(orderSnRule)
+  @ApiProperty({ description: '订单号' })
+  orderSn?: string;
+
+  @Rule(paySnRule)
+  @ApiProperty({ description: '支付单号' })
+  paySn?: string;
+
+  @Rule(RuleType.string().equal(...Object.values(PayState)))
+  @ApiProperty({ description: '支付状态', enum: PayState })
+  state?: PayState;
+
   @Rule(RuleType.string().max(50))
-  @ApiProperty({ description: '用户openId，小程序和jsapi支付需要，用户的openId在每一个app中都不一样', example: 'oKuyD64Jz7mpuocREnh78ei64r74' })
-  openId?: string;
-
-  @Rule(RuleType.string().max(50))
-  @ApiProperty({ description: 'appId', example: 's3w341dfgewrwe12' })
-  appId?: string;
-
-  @Rule(RuleType.string().equal(...Object.values(PaymentType)).required())
-  @ApiProperty({ description: '支付代码(应用只绑定一种支付方式时可以不传)', example: 'u4dUATGG' })
-  payType: PaymentType;
-}
-
-export class AliPayPayParamsDTO {
-  // @Rule(RuleType.string().max(50).required())
-  // openId2: string;
-}
-/**  创建支付单DTO */
-export class CreatePayOrderDTO {
-  @Rule(payCodeRule)
-  @ApiProperty({ description: '支付代码(应用只绑定一种支付方式时可以不传)', example: 'u4dUATGG' })
-  payCode?: string;
-
-  @Rule(payCodeRule)
-  @ApiProperty({ description: '支付标题, 一般是订单的业务名称, 比如：充值', example: '充值' })
+  @ApiProperty({ description: '支付单名称' })
   title?: string;
 
-  /** 支付参数，比如微信支付 需要用户的openId */
-  @Rule(RuleType.alternatives([getSchema(WxPayParamsDTO)]).required())
-  payParams: WxPayParamsDTO | AliPayPayParamsDTO;
-}
+  @Rule(RuleType.number().min(0).max(100000000))
+  @ApiProperty({ description: '最小金额' })
+  minAmount?: number;
 
-/** 微信支付回调参数 */
-export class WxPayCallbackDTO {
-  @Rule(RuleType.string().allow(''))
-  id: string;
-  @Rule(RuleType.string().allow(''))
-  create_time: string;
-  @Rule(RuleType.string().allow(''))
-  resource_type: string;
-  @Rule(RuleType.string().allow(''))
-  event_type: string;
-  @Rule(RuleType.string().allow(''))
-  summary: string;
-  @Rule(RuleType.object())
-  resource: {
-    original_type: string;
-    algorithm: string;
-    ciphertext: string;
-    associated_data: string;
-    nonce: string
-  }
+  @Rule(RuleType.number().min(0).max(100000000))
+  @ApiProperty({ description: '最大金额' })
+  maxAmount?: number;
+
+  @Rule(RuleType.string().isoDate())
+  @ApiProperty({ description: '最小支付时间' })
+  minPayTime?: string;
+
+  @Rule(RuleType.string().isoDate())
+  @ApiProperty({ description: '最大支付时间' })
+  maxPayTime?: string;
+
+  @Rule(RuleType.boolean().allow(''))
+  @ApiProperty({ description: '是否过期' })
+  isExpired?: boolean;
+
+
+  @Rule(RuleType.string().equal('id', '-id', 'amount', '-amount', 'payTime', '-payTime'))
+  @ApiProperty({ description: '是否成功' })
+  sortBy?: string;
 }

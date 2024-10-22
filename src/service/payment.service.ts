@@ -11,7 +11,7 @@ import { nanoRandom } from "../utils/cipher";
 @Provide()
 export class PaymentService {
   /** 生成支付代号 */
-  genPayCode() {
+  genpaymentCode() {
     const randomId = nanoRandom(8);
     return randomId;
   }
@@ -46,10 +46,10 @@ export class PaymentService {
   }
   /** 创建支付 */
   async createPayment(params: CreatePaymentDTO) {
-    const payCode = this.genPayCode();
+    const paymentCode = this.genpaymentCode();
     const [payment, created] = await Payment.findOrCreate({
       where: {
-        code: payCode,
+        code: paymentCode,
       },
       defaults: {
         ...params,
