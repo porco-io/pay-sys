@@ -64,6 +64,7 @@ export class ApplicationService {
     ]).findAndCountAll({
       offset: (page - 1) * size,
       limit: size,
+      order: [['id', 'asc']]
     });
 
     return {
