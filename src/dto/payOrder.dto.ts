@@ -1,12 +1,9 @@
 import { Rule, RuleType } from "@midwayjs/validate";
 import { orderSnRule, PaginationDTO, paymentCodeRule, paySnRule, stringNil } from "./base";
 import { ApiProperty } from "@midwayjs/swagger";
-import PayState from "../define/enums";
+import { PayState } from "../define/enums";
 
 export class QueryPayOrderPageListDTO extends PaginationDTO {
-  @Rule(stringNil.max(30))
-  @ApiProperty({ description: '支付名称', example: '微信支付' })
-  name?: string;
 
   @Rule(stringNil.max(30))
   platform?: string;

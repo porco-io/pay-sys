@@ -1,7 +1,7 @@
 import { ILogger, Inject, Logger, Provide, httpError } from "@midwayjs/core";
 import { genSnowflakeId, nanoRandom } from "../utils/cipher";
 import Order from "../models/models/Order.model";
-import PayState, { OrderState, PaymentPlatform, PaymentType } from "../define/enums";
+import { OrderState, PaymentPlatform, PayState } from "../define/enums";
 import PayOrder from "../models/models/PayOrder.model";
 import { Op } from "sequelize";
 import { ApplicationService } from "./application.service";

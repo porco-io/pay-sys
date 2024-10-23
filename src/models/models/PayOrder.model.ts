@@ -11,7 +11,7 @@ import {
 import { getTableName } from "../tool";
 import { ApiProperty } from "@midwayjs/swagger";
 import { ScopeStore, ScopeType } from "../scope";
-import PayState, { PaymentPlatform } from "../../define/enums";
+import { PaymentPlatform, PayState } from "../../define/enums";
 import Payment from "./Payment.model";
 import { Op } from "sequelize";
 // paySn      String    @id @unique @db.VarChar(50)

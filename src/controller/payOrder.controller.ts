@@ -3,8 +3,11 @@ import { Context } from '@midwayjs/koa';
 import { MidwayLogger } from '@midwayjs/logger';
 import { PayOrderService } from '../service/payOrder.service';
 import { QueryPayOrderPageListDTO } from '../dto/payOrder.dto';
+import { LoginRequired } from '../middleware/auth.middleware';
 
-@Controller('/api/payOrder')
+@Controller('/api/payOrder', {
+  middleware: [LoginRequired]
+})
 export class PayOrderController {
   @Inject()
   ctx: Context;
@@ -36,5 +39,6 @@ export class PayOrderController {
     return payOrder;
   }
 
-  
+
+
 }

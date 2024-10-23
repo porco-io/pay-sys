@@ -66,7 +66,7 @@ export enum RefundState {
 }
 
 /** 支付状态 */
-enum PayState {
+export enum PayState {
   /* 已关闭 */
   closed = 'closed',
   /** 待支付 */
@@ -76,4 +76,3 @@ enum PayState {
   /** 支付失败 */
   fail = 'fail',
 }
-export default PayState;
