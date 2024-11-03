@@ -47,6 +47,8 @@ export enum OrderState {
   preparing = 'preparing',
   /* 待收货 */
   shipping = 'shipping',
+  /* 待确认收货 */
+  receiving ='receiving',
   /* 退款/售后 */
   refunding = 'refunding',
   /* 已完成 */
@@ -75,4 +77,16 @@ export enum PayState {
   success ='success',
   /** 支付失败 */
   fail = 'fail',
+}
+
+
+export enum OrderProccessType {
+  /** 即时服务订单 */
+  serviceInstant = "serviceInstant",
+  /** 延时服务订单 */
+  serviceDelay = "serviceDelay",
+  /** 商品物流订单 */
+  goodsLogistics = "goodsLogistics",
+  /** 商品即时发货订单 */
+  goodsInstant = "goodsInstant",
 }
