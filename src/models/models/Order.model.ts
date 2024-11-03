@@ -3,7 +3,7 @@ import { getTableName } from '../tool';
 import { ApiProperty } from '@midwayjs/swagger';
 import { ScopeStore, ScopeType } from '../scope';
 import Payment from './Payment.model';
-import { OrderState, RefundState } from '../../define/enums';
+import { OrderProccessType, OrderState, RefundState } from '../../define/enums';
 
 // orderSn     String       @id @unique @db.VarChar(50)
 // // owner
@@ -134,6 +134,14 @@ export class Order extends Model<Order> {
   })
   @ApiProperty({ description: '订单编号 `${应用id}_${luid}`'})
   orderSn: string;
+
+  /** 订单业务类型, 根据流程类型，编排订单任务 */
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  @ApiProperty({ description: '订单业务流程类型'})
+  procType: OrderProccessType;
 
   /** 业务单号 */
   @Column({
