@@ -2,6 +2,7 @@ import { Inject, Controller, Get, Query, Post, Body, Patch, httpError, Param, De
 import { Context } from '@midwayjs/koa';
 import { PayService } from '../service/pay.service';
 import { MidwayLogger } from '@midwayjs/logger';
+import { TemporalService } from '../service/temporal.service';
 
 @Controller('/api/test')
 export class PayController {
@@ -14,6 +15,9 @@ export class PayController {
   @Inject()
   payService: PayService;
 
+  @Inject()
+  temporalService: TemporalService;
+
   // 测试接口
   @Get('/', {
     description: '测试接口',
@@ -21,6 +25,17 @@ export class PayController {
   async test() {
     return 'test';
   }
+
+  // 测试接口
+  @Get('/order-workflow/:orderSn', {
+    description: '测试接口',
+  })
+  async testOrderWorkflow(@Param('orderSn') orderSn: string) {
+    await this.temporalService.startOrderWorkflow(orderSn);
+    return true;
+  }
+
+  
 
 
 }

@@ -10,9 +10,7 @@ import { PAY_EXPIRE_LIMIT } from "../define/consts";
 import { CreatePayOrderDTO, WxPayCallbackDTO, WxPayParamsDTO } from "../dto/pay.dto";
 import { WxService } from "./wx.service";
 import { OrderService } from "./order.service";
-import { MidwayLogger } from "@midwayjs/logger";
 import Payment from "../models/models/Payment.model";
-import { WxPayUtil } from "../utils/wxpay";
 
 @Provide()
 export class PayService {

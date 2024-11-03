@@ -7,6 +7,7 @@ import {
   Destroy,
   Inject,
   Logger,
+  Singleton,
 } from '@midwayjs/core';
 import {
   AmqpConnectionManager,
@@ -20,7 +21,7 @@ import { ILogger } from '@midwayjs/logger';
 
 @Autoload()
 @Provide()
-@Scope(ScopeEnum.Singleton) // Singleton 单例，全局唯一（进程级别）
+@Singleton() // Singleton 单例，全局唯一（进程级别）
 export class RabbitmqService {
   // 连接
   private connection: AmqpConnectionManager;
