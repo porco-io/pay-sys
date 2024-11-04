@@ -1,27 +1,8 @@
-import { ILogger, Inject, Logger, Provide, httpError } from "@midwayjs/core";
-import { genSnowflakeId, nanoRandom } from "../utils/cipher";
-import Order from "../models/models/Order.model";
-import {
-  OrderState,
-  PaymentPlatform,
-  PaymentType,
-  PayState,
-} from "../define/enums";
+import { ILogger, Inject, Logger, Provide} from "@midwayjs/core";
 import PayOrder, { payOrderScope } from "../models/models/PayOrder.model";
-import { Op } from "sequelize";
 import { ApplicationService } from "./application.service";
-import moment from "moment";
-import { PAY_EXPIRE_LIMIT } from "../define/consts";
-import {
-  CreatePayOrderDTO,
-  WxPayCallbackDTO,
-  WxPayParamsDTO,
-} from "../dto/pay.dto";
 import { WxService } from "./wx.service";
 import { OrderService } from "./order.service";
-import { MidwayLogger } from "@midwayjs/logger";
-import Payment from "../models/models/Payment.model";
-import { WxPayUtil } from "../utils/wxpay";
 import { QueryPayOrderPageListDTO } from "../dto/payOrder.dto";
 
 @Provide()
