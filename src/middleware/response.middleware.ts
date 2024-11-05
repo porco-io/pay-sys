@@ -5,7 +5,7 @@ import { NextFunction,  } from '@midwayjs/koa';
 export class ResponseMiddleware implements IMiddleware<Context, NextFunction> {
   
   resolve() {
-    return async (ctx: Context, next: NextFunction) => {
+    return async (ctx: Context, next: NextFunction): Promise<IStruct.ApiResp> => {
       const result = await next();
 
       if (ctx.state.rawBody) {

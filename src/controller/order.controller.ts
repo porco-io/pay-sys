@@ -116,7 +116,7 @@ export class OrderController {
   // }
 
   /** 取消订单 */
-  @Patch("/:orderSn/cancel", {
+  @Post("/:orderSn/cancel", {
     description: "取消订单",
     middleware: [LoginRequired],
   })
@@ -134,6 +134,40 @@ export class OrderController {
       await this.orderService.cancel(order);
     }
 
+    return true;
+  }
+
+  /** 完成订单 */
+  @Post("/:orderSn/complete", {
+    description: "完成订单",
+    middleware: [LoginRequired],
+  })
+  async complete(
+    @Param("orderSn") orderSn: string,
+    // @Body() params: CancelOrderDTO
+  ) {
+    const order = await this.orderService.findBySn(orderSn);
+    if (!order) {
+      throw new httpError.NotFoundError("订单不存在");
+    }
+    await this.orderService.complete(order);
+    return true;
+  }
+
+  /** 发货 */
+  @Post("/:orderSn/ship", {
+    description: "发货订单",
+    middleware: [LoginRequired],
+  })
+  async ship(
+    @Param("orderSn") orderSn: string,
+    // @Body() params: CancelOrderDTO
+  ) {
+    const order = await this.orderService.findBySn(orderSn);
+    if (!order) {
+      throw new httpError.NotFoundError("订单不存在");
+    }
+    await this.orderService.ship(order);
     return true;
   }
 }

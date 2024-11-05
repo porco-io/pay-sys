@@ -1,4 +1,4 @@
-import { httpError, Inject, Provide } from '@midwayjs/core';
+import { httpError, ILogger, Inject, Logger, Provide } from '@midwayjs/core';
 import { isNil, omitBy, uniq } from 'lodash';
 import { CreateApplicationDTO, QueryAppPageListDTO, UpdateApplicationDTO } from '../dto/application.dto';
 import Application, { applicationScope } from '../models/models/Application.model';
@@ -6,9 +6,11 @@ import { PaymentService } from './payment.service';
 import Order, { orderScope } from '../models/models/Order.model';
 import { CreateOrderDTO, QueryOrderPageListDTO } from '../dto/order.dto';
 import luid from 'luid'
-import { OrderState } from '../define/enums';
+import { OrderProcessType, OrderState } from '../define/enums';
 import { genSnowflakeId } from '../utils/cipher';
 import { PayService } from './pay.service';
+import { apis } from '../api/apis';
+import { AxiosResponse } from 'axios';
 
 @Provide()
 export class OrderService {
@@ -17,6 +19,8 @@ export class OrderService {
   paymentService: PaymentService;
   @Inject()
   payServer: PayService;
+  @Logger()
+  logger: ILogger;
 
   genOrderSn(appId: number) {
     const orderSn = `${appId.toString().padStart(2, 'A')}${genSnowflakeId()}`
@@ -140,6 +144,45 @@ export class OrderService {
     //  取消支付单
     await this.payServer.cancelOrdersPayOrder(order.orderSn);
     // TODO: 取消退款单  -- 暂不支持退款
+    return order;
+  }
+
+  async complete(order: Order) {
+    await order.update({ state: OrderState.completed });
+    return order;
+  }
+
+  /** 发货 */
+  async ship(order: Order) {
+    // 调一个其他服务的发货接口，成功即完成发货
+    if (order.shipHookUrl) {
+      await apis.axios.post(order.shipHookUrl).catch((err: AxiosResponse) => {
+        this.logger.error(`订单[${order.orderSn}]发货失败`, err.data?.message);
+        throw new httpError.BadRequestError('发货失败');
+      });
+    }
+    switch (order.procType) {
+      case OrderProcessType.quick:
+        await order.update({ state: OrderState.completed }); break;
+      case OrderProcessType.manual:
+        await order.update({ state: OrderState.receiving }); break;
+      default:
+        throw new httpError.BadRequestError('订单流程类型错误');
+    }
+    return order;
+  }
+
+  /** 等待发货 */
+  async prepearShipOrder(order: Order) {
+    /// 更改订单状态 为 待发货
+    await order.update({ state: OrderState.preparing });
+    /// TODO: 通知卖家发货
+    if (order.prepearShipHookUrl) {
+      await apis.axios.post(order.prepearShipHookUrl).catch((err: AxiosResponse) => {
+        this.logger.error(`订单[${order.orderSn}]通知发货失败`, err.data?.message);
+        throw new httpError.BadRequestError('通知发货失败');
+      });
+    }
     return order;
   }
 }

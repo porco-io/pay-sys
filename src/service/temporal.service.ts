@@ -11,7 +11,7 @@ import {
   Singleton,
 } from "@midwayjs/core";
 import { Client, Connection } from "@temporalio/client";
-import { orderWorkflow } from "../temporal/workflows/order";
+import { orderProcessingWorkflow } from "../temporal/workflows/order";
 import Order from "../models/models/Order.model";
 import { Worker, NativeConnection } from "@temporalio/worker";
 import * as activities from "../temporal/activities";
@@ -41,7 +41,7 @@ export class TemporalService {
 
   // 开始订单工作流
   async startOrderWorkflow(orderSn: string) {
-    const handler = await this.client.workflow.start(orderWorkflow, {
+    const handler = await this.client.workflow.start(orderProcessingWorkflow, {
       args: [orderSn],
       workflowId: `order-${orderSn}`,
       taskQueue: "order-workflow",

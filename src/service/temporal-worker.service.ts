@@ -3,16 +3,10 @@ import {
   Destroy,
   ILogger,
   Init,
-  Inject,
   Logger,
   Provide,
-  Scope,
-  ScopeEnum,
   Singleton,
 } from "@midwayjs/core";
-import { Client, Connection } from "@temporalio/client";
-import { orderWorkflow } from "../temporal/workflows/order";
-import Order from "../models/models/Order.model";
 import { Worker, NativeConnection } from "@temporalio/worker";
 import * as activities from "../temporal/activities";
 import { join } from "path";

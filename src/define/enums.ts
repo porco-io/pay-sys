@@ -55,6 +55,17 @@ export enum OrderState {
   completed = 'completed',
 }
 
+export const orderStateMap = {
+  [OrderState.init]: '初始化',
+  [OrderState.closed]: '已关闭',
+  [OrderState.paying]: '待付款',
+  [OrderState.preparing]: '待发货',
+  [OrderState.shipping]: '待收货',
+  [OrderState.receiving]: '待确认收货',
+  [OrderState.refunding]: '售后服务中',
+  [OrderState.completed]: '已完成',
+};
+
 /** 售后状态 0. 无售后 1. 申请中 2. 处理中 3. 已完成 */
 export enum RefundState {
   /* 无售后 */
@@ -79,14 +90,10 @@ export enum PayState {
   fail = 'fail',
 }
 
-
-export enum OrderProccessType {
-  /** 即时服务订单 */
-  serviceInstant = "serviceInstant",
-  /** 延时服务订单 */
-  serviceDelay = "serviceDelay",
-  /** 商品物流订单 */
-  goodsLogistics = "goodsLogistics",
-  /** 商品即时发货订单 */
-  goodsInstant = "goodsInstant",
+/** 订单流程类型 */
+export enum OrderProcessType {
+  /** 速发订单 */
+  quick = "quick",
+  /** 手动发货订单 */
+  manual = "manual",
 }
