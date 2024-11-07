@@ -1,7 +1,7 @@
 import { ApiProperty } from "@midwayjs/swagger";
 import { Rule, RuleType } from "@midwayjs/validate";
-import { amountRule, IDRule, KeyRule, PaginationDTO } from "./base";
-import { OrderState } from "../define/enums";
+import { amountRule, IDRule, KeyRule, PaginationDTO, stringNil } from "./base";
+import { OrderProcessType, OrderState } from "../define/enums";
 
 export class CreateOrderDTO {
   @ApiProperty({ description: "应用Key" })
@@ -51,6 +51,14 @@ export class CreateOrderDTO {
   @ApiProperty({ description: "优惠券id" })
   @Rule(RuleType.array().items(IDRule).default(() => ([])))
   couponIds: number[];
+
+  @ApiProperty({ description: "订单流程类型" })
+  @Rule(RuleType.string().equal(OrderProcessType.auto, OrderProcessType.manual).required())
+  procType: OrderProcessType;
+
+  @ApiProperty({ description: "请求发货链接" })
+  @Rule(stringNil)
+  shipHookUrl?: string;
 }
 
 

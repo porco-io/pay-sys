@@ -11,6 +11,7 @@ import { genSnowflakeId } from '../utils/cipher';
 import { PayService } from './pay.service';
 import { apis } from '../api/apis';
 import { AxiosResponse } from 'axios';
+import { TemporalService } from './temporal.service';
 
 @Provide()
 export class OrderService {
@@ -21,6 +22,9 @@ export class OrderService {
   payServer: PayService;
   @Logger()
   logger: ILogger;
+
+  @Inject()
+  temporalService: TemporalService;
 
   genOrderSn(appId: number) {
     const orderSn = `${appId.toString().padStart(2, 'A')}${genSnowflakeId()}`
@@ -58,6 +62,8 @@ export class OrderService {
       bizName: params.bizName || app.name,
       orderSn,
     });
+    // 启动订单流程
+    this.temporalService.startOrderWorkflow(order.orderSn);
     return order;
   }
 
@@ -162,7 +168,7 @@ export class OrderService {
       });
     }
     switch (order.procType) {
-      case OrderProcessType.quick:
+      case OrderProcessType.auto:
         await order.update({ state: OrderState.completed }); break;
       case OrderProcessType.manual:
         await order.update({ state: OrderState.receiving }); break;

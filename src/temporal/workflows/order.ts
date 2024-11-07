@@ -1,6 +1,6 @@
 import { proxyActivities, executeChild, sleep } from "@temporalio/workflow";
 import * as orderActivities from "../activities/order";
-import { OrderProcessType } from "../../define/enums";
+import { OrderProcessType, OrderState } from "../../define/enums";
 
 const {
   findOrder,
@@ -21,20 +21,29 @@ export const orderProcessingWorkflow = async (orderSn: string) => {
   // 查询订单
   const order = await findOrder(orderSn);
   // 检查订单支付状态
-  const payResult = await executeChild(checkPaymentWorkflow, {
-    args: [orderSn],
-  });
-  /// 支付超时或其他
-  if (!payResult) {
-    // 进入关闭订单工作流
-    await executeChild(closeOrderWorkflow, { args: [orderSn] });
+  try {
+    const {
+      success,
+      shouldClose,
+    } = await executeChild(checkPaymentWorkflow, {
+      args: [orderSn],
+    });
+    // 支付失败或超时或订单被关闭
+    if (!success) {
+      if (shouldClose) {
+        await executeChild(closeOrderWorkflow, { args: [orderSn] });
+      }
+      return;
+    }
+  } catch (e) {
+    // 其他错误
+    console.log(e.message);
     return;
   }
-
   /// 根据订单流程类型进入下一个工作流
   switch (order.procType) {
     // 速发订单
-    case OrderProcessType.quick:
+    case OrderProcessType.auto:
       {
         /// 进入发货流程
         await executeChild(shipOrderWorkflow, { args: [orderSn] });
@@ -61,42 +70,63 @@ export const orderProcessingWorkflow = async (orderSn: string) => {
 };
 
 /** 检查订单支付状态流程 */
-export const checkPaymentWorkflow = async (orderSn: string) => {
-  console.log(`检查订单(${orderSn})支付状态流程开始`);
-  const order = await findOrder(orderSn);
-  const createTime = new Date(order.createdAt).getTime();
-  const timeoutDuration = 1000 * 60 * 60 * 2; // 5 minutes
+export const checkPaymentWorkflow = async (
+  orderSn: string
+): Promise<{ success: boolean; shouldClose: boolean }> => {
+  console.log(`[订单${orderSn}]等待支付流程开始`);
+  const timeoutDuration = 1000 * 60 * 60 * 2; // 2 hours
   while (true) {
     try {
-      const payResult = await getOrderPaidResult(orderSn);
-      if (payResult.payTime) {
+      const order = await getOrderPaidResult(orderSn);
+      const createTime = new Date(order.createdAt).getTime();
+      if (!order) {
+        console.log(`[订单${orderSn}]不存在`);
+        return {
+          success: false,
+          shouldClose: false,
+        };
+      }
+      /// 订单已关闭
+      if (order.state === OrderState.closed) {
+        console.log(`[订单${orderSn}]已关闭`);
+        return {
+          success: false,
+          shouldClose: true,
+        };
+      }
+      if (order.payTime) {
         // 已支付
-        console.log(`订单(${orderSn})已支付, 进入下一个流程。`);
-        return true;
+        console.log(`[订单${orderSn}]已支付, 准备进入下一个流程。`);
+        return {
+          success: true,
+          shouldClose: false,
+        };
       } else if (Date.now() - createTime >= timeoutDuration) {
+        console.log(`[订单${orderSn}]支付超时, 订单将自动关闭`);
         // 超时未支付
-        console.log(`订单(${orderSn})支付超时，订单自动关闭。`);
-        return false;
+        return {
+          success: false,
+          shouldClose: true,
+        };
       }
       // 两秒后再检查订单支付状态
       await sleep(2000);
     } catch (e) {
-      console.log(`订单(${orderSn})支付状态查询失败，将进行重试。`);
+      console.log(`[订单${orderSn}]支付状态查询失败，将进行重试。`);
       await sleep(2000);
     }
   }
-  return true;
 };
 
 /** 关闭订单工作流 */
 export const closeOrderWorkflow = async (orderSn: string) => {
-  console.log(`关闭订单(${orderSn})支付状态`);
+  console.log(`开始关闭订单(${orderSn})工作流`);
   return closeOrder(orderSn);
 };
 
 /** 完成订单工作流 */
 export const completeOrderWorkflow = async (orderSn: string) => {
-  console.log(`开始检查订单(${orderSn})支付状态`);
+  console.log(`开始完成订单(${orderSn})工作流`);
   return completeOrder(orderSn);
 };
 
@@ -109,7 +139,8 @@ export const shipOrderWorkflow = async (orderSn: string) => {
 export const preparingOrderWorkflow = async (orderSn: string) => {
   await prepearShipOrder(orderSn);
   // TODO: 准备发货，直到超时异常
-  while(true) {
+  while (true) {
+    console.log(`[订单${orderSn}]已发货`);
     break;
   }
 };
@@ -117,7 +148,8 @@ export const preparingOrderWorkflow = async (orderSn: string) => {
 /** 等待收货流程 */
 export const receivingOrderWorkflow = async (orderSn: string) => {
   // TODO: 等待收货，直到超时，进行自动收货
-  while(true) {
+  while (true) {
+    console.log(`[订单${orderSn}]已确认收货`);
     break;
   }
 };

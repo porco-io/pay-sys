@@ -93,7 +93,7 @@ export enum PayState {
 /** 订单流程类型 */
 export enum OrderProcessType {
   /** 速发订单 */
-  quick = "quick",
+  auto = "auto",
   /** 手动发货订单 */
   manual = "manual",
 }
