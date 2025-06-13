@@ -3,15 +3,17 @@ import { join } from 'path';
 import appRootPath from 'app-root-path';
 import { EnvUtil } from './utils/env';
 
-console.log(process.env.NODE_ENV)
 const config = dotenv.config({
-  path: join(appRootPath.path, `env/.env.${process.env.NODE_ENV || 'production'}`),
+  path: [
+    join(appRootPath.path, `env/.env.${process.env.NODE_ENV || 'production'}`),
+    join(appRootPath.path, `env/.env`)
+  ],
 });
 if (!EnvUtil.isTest) {
   console.log(config.parsed);
 }
 
-import { Configuration, App, type IMidwayContainer, Config, Logger, Inject } from '@midwayjs/core';
+import { Configuration, App, type IMidwayContainer, Config, Logger, Inject, IMidwayApplication } from '@midwayjs/core';
 
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
@@ -31,6 +33,10 @@ import { initAdminUser } from './models/setup';
 import { ErrorMiddleware } from './middleware/error.middleware';
 import { ResponseMiddleware } from './middleware/response.middleware';
 import { AuthMiddleware } from './middleware/auth.middleware';
+import { initLogger, logLevels } from './utils/loggers';
+import { ConsulService } from './service/consul.service';
+import { RabbitmqService } from './service/rabbitmq';
+import AdminUser from './models/models/AdminUser';
 
 @Configuration({
   imports: [
@@ -61,19 +67,33 @@ export class MainConfiguration {
   @sequelize.InjectDataSource()
   dataSource: Sequelize;
 
-  async onReady(container: IMidwayContainer) {
-    await initAdminUser(this.dataSource);
+   /** 修改配置 */
+   async onConfigLoad(container: IMidwayContainer, mainApp?: IMidwayApplication) {
+    console.log('当前环境: ', process.env.NODE_ENV);
+    const consulService = await container.getAsync(ConsulService, [mainApp.getProjectName()]);
+    // 从远端加载配置
+    const config = await consulService.buildMidwayConfig();
+    mainApp.addConfigObject(config);
+  }
 
+  async onReady(container: IMidwayContainer, mainApp?: IMidwayApplication) {
+    initLogger({
+      level: EnvUtil.isProd ? logLevels.ALL.levelStr : logLevels.DEBUG.levelStr,
+      logDir: join(appRootPath.path, EnvUtil.isTest ? 'logs/test' : 'logs'),
+    });
+    await AdminUser.initAdminUser();
+    await container.getAsync(RabbitmqService);
     this.app.useMiddleware([
       ReportMiddleware,
       ErrorMiddleware,
       ResponseMiddleware,
       AuthMiddleware,
     ]);
-    // const users = await this.dataSource.models.User.findAll({
-    //   logging: console.log,
-    // });
-    // console.log('users', users);
+  }
+
+  async onServerReady(container: IMidwayContainer, mainApp?: IMidwayApplication): Promise<void> {
+    const consulService = await container.getAsync(ConsulService, [mainApp.getProjectName()]);
+    consulService.register();
   }
 
   async onStop(container: IMidwayContainer) {

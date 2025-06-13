@@ -24,7 +24,7 @@ export class UserService {
     const salt = genSalt();
     const dbPassword = generatePassword(password, salt);
 
-    const [newUser, created] = await models.User.findOrCreate({
+    const [newUser, created] = await models.AdminUser.findOrCreate({
       where: {
         username,
       },
@@ -48,7 +48,7 @@ export class UserService {
       username,
       password,
     } = params;
-    const userInfo = await models.User.findOne({
+    const userInfo = await models.AdminUser.findOne({
       where: {
         username,
       },

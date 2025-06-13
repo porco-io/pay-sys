@@ -48,7 +48,7 @@ export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
       const payload = decoded.payload as IStruct.UserCache;
       const curUser = await (async () => {
         try {
-          return await models.User.findByPk(payload.id);
+          return await models.AdminUser.findByPk(payload.id);
         } catch {
           return null;
         }

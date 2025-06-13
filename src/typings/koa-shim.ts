@@ -3,7 +3,7 @@ import '@midwayjs/core';
 declare module '@midwayjs/core' {
   interface Context {
     state: {
-      user?: import('../models/models/User.model').User,
+      user?: import('../models/models/AdminUser').AdminUser,
       rawBody?: boolean,
     } & Record<string, any>
   }

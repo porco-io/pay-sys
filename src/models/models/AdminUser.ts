@@ -3,13 +3,15 @@ import { getTableName } from '../tool';
 import { ApiProperty } from '@midwayjs/swagger';
 import { ScopeStore, ScopeType } from '../scope';
 import { UserStatus } from '../../define/enums';
+import { v4 } from 'uuid';
+import { generatePassword } from '../../utils/helper';
 
 export const userScope = new ScopeStore({
   
 });
 
-@Table<User>({
-  tableName: getTableName('user'),
+@Table<AdminUser>({
+  tableName: getTableName('admin_user'),
   defaultScope: {
     attributes: {
       exclude: ['password', 'salt']
@@ -17,7 +19,7 @@ export const userScope = new ScopeStore({
   },
   scopes: userScope.mapOptions()
 })
-export class User extends Model<User> {
+export class AdminUser extends Model<AdminUser> {
 
   @Column({
     type: DataType.STRING(15),
@@ -58,6 +60,28 @@ export class User extends Model<User> {
   })
   @ApiProperty()
   avatar: string
+
+  static async initAdminUser() {
+    const adminUser = await AdminUser.findOne({
+      where: {
+        username: process.env.ADMIN_USERNAME
+      },
+      attributes: ['id']
+    })
+    if (adminUser) return;
+    const salt = v4();
+    const password = generatePassword(process.env.ADMIN_PASSWORD, salt)
+    await AdminUser.findOrCreate({
+      where: {
+        username: process.env.ADMIN_USERNAME
+      },
+      defaults: {
+        salt,
+        password,
+        status: UserStatus.NORMAL,
+      }
+    })
+  }
 }
 
-export default User;
+export default AdminUser;

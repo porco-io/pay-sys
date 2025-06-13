@@ -1,7 +1,7 @@
-import { User } from "./models/User.model"
+import { AdminUser } from "./models/AdminUser"
 // import { IMidwayKoaApplication } from '@midwayjs/koa';
 
 export const models = {
-  User,
+  AdminUser,
   
 }
