@@ -82,7 +82,7 @@ export class MainConfiguration {
       logDir: join(appRootPath.path, EnvUtil.isTest ? 'logs/test' : 'logs'),
     });
     await AdminUser.initAdminUser();
-    await container.getAsync(RabbitmqService);
+    // await container.getAsync(RabbitmqService);
     this.app.useMiddleware([
       ReportMiddleware,
       ErrorMiddleware,

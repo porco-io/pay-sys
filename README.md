@@ -56,9 +56,9 @@ podman run --name postgres -e POSTGRES_PASSWORD=Abba1234! -tid -p 5432:5432 post
 ```
 创建数据库
 ```sql
-CREATE DATABASE hipo_pay;
+CREATE DATABASE pay;
 /** 用于单测 */
-CREATE DATABASE hipo_pay_test;
+CREATE DATABASE pay_test;
 ```
 
 创建redis缓存(使用keydb平替redis)
