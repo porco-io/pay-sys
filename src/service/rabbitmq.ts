@@ -19,9 +19,9 @@ import {
 import { EXCHANGE_TYPE, Exchanges, Queues, exchangeOptions, queueOptions } from '../define/mq';
 import { ILogger } from '@midwayjs/logger';
 
-@Autoload()
-@Provide()
-@Singleton() // Singleton 单例，全局唯一（进程级别）
+// @Autoload()
+// @Provide()
+// @Singleton() // Singleton 单例，全局唯一（进程级别）
 export class RabbitmqService {
   // 连接
   private connection: AmqpConnectionManager;
