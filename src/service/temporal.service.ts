@@ -16,9 +16,9 @@ import Order from "../models/models/Order.model";
 import { Worker, NativeConnection } from "@temporalio/worker";
 import * as activities from "../temporal/activities";
 
-@Autoload()
-@Singleton()
-@Provide()
+// @Autoload()
+// @Singleton()
+// @Provide()
 export class TemporalService {
   @Logger()
   logger: ILogger;

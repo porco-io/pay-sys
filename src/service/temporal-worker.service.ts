@@ -11,9 +11,9 @@ import { Worker, NativeConnection } from "@temporalio/worker";
 import * as activities from "../temporal/activities";
 import { join } from "path";
 
-@Autoload()
-@Singleton()
-@Provide()
+// @Autoload()
+// @Singleton()
+// @Provide()
 export class TemporalWorkerService {
   @Logger()
   logger: ILogger;
