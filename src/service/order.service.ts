@@ -23,8 +23,8 @@ export class OrderService {
   @Logger()
   logger: ILogger;
 
-  @Inject()
-  temporalService: TemporalService;
+  // @Inject()
+  // temporalService: TemporalService;
 
   genOrderSn(appId: number) {
     const orderSn = `${appId.toString().padStart(2, 'A')}${genSnowflakeId()}`
@@ -63,7 +63,7 @@ export class OrderService {
       orderSn,
     });
     // 启动订单流程
-    this.temporalService.startOrderWorkflow(order.orderSn);
+    // this.temporalService.startOrderWorkflow(order.orderSn);
     return order;
   }
 
