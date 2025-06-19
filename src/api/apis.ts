@@ -20,19 +20,26 @@ const wxShop = axios.create({
   baseURL: process.env.WX_MCH_API
 })
 
-// wxShop.interceptors.request.use((config) => {
-//   // const headerAuthorization = getWxShopAuthorization({
-//   //   body: config.data,
-//   //   method: config.method?.toUpperCase() ?? '',
-//   //   url: config.url!,
-//   //   mchId: config['states']?.['mchId'],
-//   //   serialNo: config['states']?.['serialNo'],
-//   //   pem: config['states']?.['pem'],
-//   // });
-//   config.headers = config.headers.concat({
-//     ...(config.headers ?? {}),
-//   });
-//   return config;
+wxShop.interceptors.request.use((config) => {
+  if (!config.baseURL) {
+    wxShop.defaults.baseURL = process.env.WX_MCH_API;
+    config.baseURL = process.env.WX_MCH_API;
+  }
+  // const headerAuthorization = getWxShopAuthorization({
+  //   body: config.data,
+  //   method: config.method?.toUpperCase() ?? '',
+  //   url: config.url!,
+  //   mchId: config['states']?.['mchId'],
+  //   serialNo: config['states']?.['serialNo'],
+  //   pem: config['states']?.['pem'],
+  // });
+  // console.log(headerAuthorization)
+  // config.headers = config.headers.concat({
+  //   ...(config.headers ?? {}),
+  //   Authorization: headerAuthorization
+  // });
+  return config;
+});
 
 /** 高德地图api */
 const amap = axios.create({

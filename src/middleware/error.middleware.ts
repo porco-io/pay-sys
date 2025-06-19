@@ -18,6 +18,7 @@ export class ErrorMiddleware implements IMiddleware<Context, NextFunction> {
         if (ctx.status === 500) {
           return 'Server Internal Error'
         }
+        // console.error('错误捕获-:', err)
         return {
           success: false,
           data: null,

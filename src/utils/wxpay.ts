@@ -6,6 +6,7 @@ import crypto from "crypto";
 import axios from "axios";
 import { CacheManager } from "@midwayjs/cache-manager";
 import { nanoRandom } from "./cipher";
+import { loggers } from "./loggers";
 
 /** 解析base64格式json对象 */
 export const resolveBase64json = <T = any>(base64Str: string): T | void => {
@@ -204,7 +205,7 @@ export class WxPayUtil {
     payAmount: number;
   }) {
     /** 支付回调地址 */
-    const payCallback = `${process.env.APP_HOST}/v1/pay/wxCallback/${params.paySn}`;
+    const payCallback = `${process.env.SERVER_HOST}/v1/pay/wxCallback/${params.paySn}`;
     const prepayApi = "/v3/pay/transactions/app";
     const wxPayParams = {
       mchid: this.config.MCH_ID,
@@ -379,7 +380,7 @@ export class WxPayUtil {
     openid: string;
   }) {
     /** 支付回调地址 */
-    const payCallback = `${process.env.APP_HOST}/v1/pay/wxCallback/${params.paySn}`;
+    const payCallback = `${process.env.SERVER_HOST}/v1/pay/wxCallback/${params.paySn}`;
     const prepayApi = "/v3/pay/transactions/jsapi";
     const wxPayParams = {
       mchid: this.config.MCH_ID,
@@ -413,9 +414,12 @@ export class WxPayUtil {
           body: wxPayParams,
         }),
       },
+    }).catch((err) => {
+      loggers.default.error(err.message);
+      return null;
     });
     // this.logger.info("prepay_id:", resp.data);
-    if (!resp.data.prepay_id) {
+    if (!resp?.data.prepay_id) {
       throw new httpError.BadRequestError(`微信下单失败, ${resp.data.message}`);
     }
     return resp.data.prepay_id;

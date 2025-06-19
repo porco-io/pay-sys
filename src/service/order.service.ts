@@ -47,7 +47,7 @@ export class OrderService {
     return order;
   }
 
-  /** 创建 */
+  /** 创建订单 */
   async create(params: CreateOrderDTO) {
     const app = await Application.findByKey(params.appKey);
     if (!app) {

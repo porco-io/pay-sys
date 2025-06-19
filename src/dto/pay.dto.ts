@@ -13,7 +13,7 @@ export class WxPayParamsDTO {
   appId?: string;
 
   @Rule(RuleType.string().equal(...Object.values(PaymentType)).required())
-  @ApiProperty({ description: '支付代码(应用只绑定一种支付方式时可以不传)', example: 'u4dUATGG' })
+  @ApiProperty({ description: '支付形式', example: 'u4dUATGG' })
   payType: PaymentType;
 }
 
@@ -27,7 +27,7 @@ export class CreatePayOrderDTO {
   @ApiProperty({ description: '支付代码(应用只绑定一种支付方式时可以不传)', example: 'u4dUATGG' })
   paymentCode?: string;
 
-  @Rule(paymentCodeRule)
+  @Rule(RuleType.string().max(10))
   @ApiProperty({ description: '支付标题, 一般是订单的业务名称, 比如：充值', example: '充值' })
   title?: string;
 
