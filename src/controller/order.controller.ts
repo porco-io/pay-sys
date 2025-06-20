@@ -1,23 +1,8 @@
-import {
-  Inject,
-  Controller,
-  Get,
-  httpError,
-  Queries,
-  Post,
-  Patch,
-  Param,
-  Body,
-  Logger,
-  ILogger,
-} from "@midwayjs/core";
+import { Inject, Controller, Get, httpError, Queries, Post, Patch, Param, Body, Logger, ILogger, } from "@midwayjs/core";
 import { Context } from "@midwayjs/koa";
+
 import { LoginRequired } from "../middleware/auth.middleware";
-import {
-  CancelOrderDTO,
-  CreateOrderDTO,
-  QueryOrderPageListDTO,
-} from "../dto/order.dto";
+import { CancelOrderDTO, CreateOrderDTO, QueryOrderPageListDTO, } from "../dto/order.dto";
 import { OrderService } from "../service/order.service";
 import { CreatePayOrderDTO } from "../dto/pay.dto";
 import { PayService } from "../service/pay.service";
@@ -55,11 +40,7 @@ export class OrderController {
     description: "发起订单支付",
     middleware: [LoginRequired],
   })
-  async createPayOrder(
-    @Param("orderSn") orderSn: string,
-    @Body() params: CreatePayOrderDTO
-  ) {
-    //
+  async createPayOrder(@Param("orderSn") orderSn: string, @Body() params: CreatePayOrderDTO ) {
     // const order = await this.orderService.create(params);
     this.logger.debug("params: ", params);
     // const order = await this.orderService.create(params);

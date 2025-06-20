@@ -21,6 +21,7 @@ export class AliPayPayParamsDTO {
   // @Rule(RuleType.string().max(50).required())
   // openId2: string;
 }
+
 /**  创建支付单DTO */
 export class CreatePayOrderDTO {
   @Rule(paymentCodeRule)
