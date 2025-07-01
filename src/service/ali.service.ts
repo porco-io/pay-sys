@@ -1,29 +1,14 @@
 import { httpError, ILogger, Logger, Provide } from "@midwayjs/core";
-import { addStorage, StorageKeys } from "../utils/storage";
-import { getWxAccessToken, getWxPaySign, WxPayUtil } from "../utils/wxpay";
-import { apis } from "../api/apis";
-import moment from "moment";
-import { models } from "../models/models";
 import PayOrder from "../models/models/PayOrder.model";
-import { nanoRandom } from "../utils/cipher";
-import { AxiosRequestConfig } from "axios";
-import { Caching } from "@midwayjs/cache-manager";
-import Payment from "../models/models/Payment.model";
-import { PaymentType } from "../define/enums";
-import { WxPayParamsDTO } from "../dto/pay.dto";
-
 import { AlipaySdk, AlipaySdkCommonResult } from 'alipay-sdk';
-
-import { v4 as uuidv4 } from "uuid";
-
 @Provide()
 export class AliService {
   @Logger()
   logger: ILogger;
 
   /** 获取支付宝支付前端调起所需数据 */
-  async getAliPayParams() {
-    const CALLBACK_URL = 'https://b65d-183-223-82-107.ngrok-free.app/api/pay/alipayCallback';
+  async getAliPayParams(payOrder: PayOrder) {
+    const payCallback = `${process.env.SERVER_HOST}/pay/alipayCallback/${payOrder.paySn}`;
     
     const alipayConfig = {
       appId: '2021005155667848',
@@ -34,26 +19,22 @@ export class AliService {
     
     const alipaySdk = new AlipaySdk({
       ...alipayConfig,
-        timeout: 5000,
-        signType: 'RSA2' // 推荐使用 RSA2 签名
+      timeout: 5000,
+      signType: 'RSA2' // 推荐使用 RSA2 签名
     });
 
-    // 生成业务订单号
-    const outTradeNo = `ORDER_${uuidv4().replace(/-/g, "").slice(0, 20)}`;
     try {
       // 调用支付宝预支付接口
       const result = (await alipaySdk.exec("alipay.trade.create", {
         bizContent: {
-          out_trade_no: outTradeNo,
+          out_trade_no: payOrder.orderSn,
           // total_amount: (totalAmount / 100).toString(), // 支付宝金额单位为元
-          total_amount: '0.01',
-          subject: '测试商品',
+          total_amount: payOrder.amount,
+          subject: payOrder.title,
           op_app_id: alipayConfig.appId,
-          // buyer_open_id: user.openId,
           buyer_open_id: '007iL1kt9FxGPQKilXuun4jI4Uvg6qFDo8paE5gFquLW0Ea',
-          // notify_url: CALLBACK_URL
         },
-        notify_url: CALLBACK_URL
+        notify_url: payCallback
       })) as AlipaySdkCommonResult & { tradeNo: string; outTradeNo: string };
   
       return result;

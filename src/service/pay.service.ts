@@ -9,6 +9,7 @@ import moment from "moment";
 import { PAY_EXPIRE_LIMIT } from "../define/consts";
 import { CreatePayOrderDTO, WxPayCallbackDTO, WxPayParamsDTO } from "../dto/pay.dto";
 import { WxService } from "./wx.service";
+import { AliService } from './ali.service';
 import { OrderService } from "./order.service";
 import Payment from "../models/models/Payment.model";
 
@@ -19,6 +20,9 @@ export class PayService {
 
   @Inject()
   wxService: WxService;
+
+  @Inject()
+  aliService: AliService;
 
   @Inject()
   orderService: OrderService;
@@ -124,6 +128,7 @@ export class PayService {
       payParams: params.payParams,
     });
 
+    // 更新订单的支付code、支付单号、状态
     await order.update({
       paymentCode: payOrder.paymentCode,
       paySn: payOrder.paySn,
@@ -173,6 +178,7 @@ export class PayService {
     return payOrder;
   }
 
+  // 获取微信支付参数
   async getPayParams(payOrder: PayOrder) {
     if (!payOrder.payment) {
       await payOrder.reload({
@@ -181,9 +187,14 @@ export class PayService {
     }
     const paymentConfig = (payOrder.payment.details ?? {});
     switch (payOrder.platform) {
+      // 微信支付
       case PaymentPlatform.wechat: {
         return this.wxService.getWxPayParams(payOrder, paymentConfig as IStruct.WxPayConfig);
       } break;
+      // 支付宝支付
+      case PaymentPlatform.alipay:
+        return this.aliService.getAliPayParams(payOrder);
+        break;
       default:
         throw new httpError.ForbiddenError(
           `支付方式(${payOrder.platform})不支持`

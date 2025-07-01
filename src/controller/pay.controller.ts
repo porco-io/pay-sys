@@ -24,15 +24,13 @@ export class PayController {
   aliService: AliService;
 
   // 获取微信支付参数
-  @Get('/:paySn/payParams', {
-    description: '获取支付参数',
-  })
+  @Get('/:paySn/wxpayParams', { description: '获取微信支付参数' })
   async getPayParams(@Param('paySn') paySn: string) {
     const payOrder = await this.payService.findByPaySn(paySn);
     if (!payOrder) {
       throw new httpError.BadRequestError('支付单不存在');
     }
-    /// 如果不是正在支付的支付单，则抛错
+    // 如果不是正在支付的支付单，则抛错
     const stateErrMsg = payOrder.matchState(PayState.paying);
     if (stateErrMsg !== true) {
       throw new httpError.ConflictError(stateErrMsg);
@@ -61,19 +59,27 @@ export class PayController {
   }
 
   // 获取支付宝-支付参数
-  @Get('/alipayParams', {
-    description: '获取支付宝支付参数',
-  })
-  async getAliPayParams() {
-    const payParams = await this.aliService.getAliPayParams();
+  @Get('/:paySn/alipayParams', { description: '获取支付宝支付参数' })
+  async getAliPayParams(@Param('paySn') paySn: string) {
+    const payOrder = await this.payService.findByPaySn(paySn);
+    if (!payOrder) {
+      throw new httpError.BadRequestError('支付单不存在');
+    }
+    // 如果不是正在支付的支付单，则抛错
+    const stateErrMsg = payOrder.matchState(PayState.paying);
+    if (stateErrMsg !== true) {
+      throw new httpError.ConflictError(stateErrMsg);
+    }
+
+    const payParams = await this.payService.getPayParams(payOrder);
     return payParams;
   }
 
   // 支付宝支付回调
-  @Post('/alipayCallback', {
+  @Post('/alipayCallback/:paySn', {
     description: '支付宝支付回调(只有支付成功才有回调)',
   })
-  async handleAliPayCallback(@Body() params: any) {
+  async handleAliPayCallback(@Param('paySn') paySn: string, @Body() params: any) {
     console.log('params: ', params);
     return true;
   }
