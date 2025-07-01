@@ -2,6 +2,7 @@ import { Inject, Controller, Get, Query, Post, Body, Patch, httpError, Param, De
 import { Context } from '@midwayjs/koa';
 import { WxPayCallbackDTO } from '../dto/pay.dto';
 import { PayService } from '../service/pay.service';
+import { AliService } from '../service/ali.service';
 import { MidwayLogger } from '@midwayjs/logger';
 import { PayState } from '../define/enums';
 import { LoginRequired } from '../middleware/auth.middleware';
@@ -19,7 +20,10 @@ export class PayController {
   @Inject()
   payService: PayService;
 
-  // 获取支付参数
+  @Inject()
+  aliService: AliService;
+
+  // 获取微信支付参数
   @Get('/:paySn/payParams', {
     description: '获取支付参数',
   })
@@ -56,4 +60,21 @@ export class PayController {
     return true;
   }
 
+  // 获取支付宝-支付参数
+  @Get('/alipayParams', {
+    description: '获取支付宝支付参数',
+  })
+  async getAliPayParams() {
+    const payParams = await this.aliService.getAliPayParams();
+    return payParams;
+  }
+
+  // 支付宝支付回调
+  @Post('/alipayCallback', {
+    description: '支付宝支付回调(只有支付成功才有回调)',
+  })
+  async handleAliPayCallback(@Body() params: any) {
+    console.log('params: ', params);
+    return true;
+  }
 }

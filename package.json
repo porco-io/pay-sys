@@ -24,6 +24,7 @@
     "@temporalio/worker": "^1.11.3",
     "@temporalio/workflow": "^1.11.3",
     "@types/node": "^16.18.97",
+    "alipay-sdk": "^4.14.0",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.4",
     "ansi-colors": "^4.1.3",
