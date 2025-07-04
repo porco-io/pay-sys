@@ -153,6 +153,7 @@ export class OrderService {
     return order;
   }
 
+  /** 完成订单 */
   async complete(order: Order) {
     await order.update({ state: OrderState.completed });
     return order;
