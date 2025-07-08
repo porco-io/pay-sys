@@ -219,8 +219,14 @@ export class PayService {
       await payOrder.update({
         state: PayState.success,
       });
-      // TODO: 处理订单流转下一步状态
+      // TODO: 处理订单流转下一步状态 (应该进入 preparing 待发货状态)
       // TODO：将消息发到mq上，
+
+      const order = await this.orderService.findBySn(payOrder.orderSn);
+      if (order) {
+        // 更新订单状态 为 待发货状态
+        await order.update({ state: OrderState.preparing });
+      }
     }
   }
 }
