@@ -73,7 +73,10 @@ export class ConsulService {
   }
 
   getConsulKey() {
-    return `${this.projectName}/${process.env.NODE_ENV}${process.env.LOCAL_NAME ? `.${process.env.LOCAL_NAME}` : ''}`
+    if (EnvUtil.isLocal) {
+      return `${this.projectName}/${process.env.NODE_ENV}${process.env.LOCAL_NAME ? `.${process.env.LOCAL_NAME}` : ''}`
+    } 
+    return `${this.projectName}/${process.env.NODE_ENV}`
   }
 
   async getRemoteConfig() {
