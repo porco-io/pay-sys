@@ -45,6 +45,7 @@ export class RabbitmqService {
       this.connection = connect({
         hostname: process.env.MQ_HOST,
         vhost: process.env.MQ_VHOST,
+        port: Number(process.env.MQ_PORT ?? 5672),
         username: process.env.MQ_USERNAME,
         password: process.env.MQ_PASSWORD,
       });
