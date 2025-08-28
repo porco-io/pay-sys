@@ -201,7 +201,7 @@ export class ConsulService {
           host: this.remoteConfig?.REDIS_HOST || '127.0.0.1', // Redis host
         },
       },
-    } //as MidwayConfig;
+    } as MidwayConfig;
   }
 
   @Destroy()

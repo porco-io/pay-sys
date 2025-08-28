@@ -1,19 +1,15 @@
-import { Middleware, IMiddleware, httpError, Inject } from '@midwayjs/core';
+import { Middleware, IMiddleware, httpError, Inject, Scope } from '@midwayjs/core';
 import { NextFunction, Context } from '@midwayjs/koa';
 import { models } from '../models/models';
 import { JwtService } from '@midwayjs/jwt';
 import {JwtKeyid } from '../define/enums';
-import { ApplicationService } from '../service/application.service';
+import Application from '../models/models/Application.model';
 
 @Middleware()
 export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
   @Inject()
   jwtService: JwtService;
 
-  @Inject()
-  applicationService: ApplicationService;
-
-  @Inject()
   /** 白名单 */
   whiteList = ['/api/auth', '/status.ok'];
 
@@ -40,7 +36,7 @@ export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
         }
       } else if (appKey) {
         const appSecret = ctx.headers['x-app-token']?.toString();
-        const app = await this.applicationService.findByKey(appKey);
+        const app = await Application.findByKey(appKey);
         if (app && appSecret) {
           if (app.secret === appSecret) {
             ctx.state.application = app;
