@@ -1,14 +1,29 @@
-import { Inject, Controller, Get, httpError, Queries, Post, Patch, Param, Body, Del} from '@midwayjs/core';
-import { Context } from '@midwayjs/koa';
-import { InternalRequired } from '../../middleware/auth.middleware';
-import { CancelOrderDTO, CreateOrderDTO, QueryOrderPageListDTO } from '../../dto/order.dto';
-import { OrderService } from '../../service/order.service';
-import { MidwayLogger } from '@midwayjs/logger';
-import { ApplicationService } from '../../service/application.service';
-import { PayService } from '../../service/pay.service';
-import { CreatePayOrderDTO } from '../../dto/pay.dto';
+import {
+  Inject,
+  Controller,
+  Get,
+  httpError,
+  Queries,
+  Post,
+  Param,
+  Body,
+} from "@midwayjs/core";
+import { Context } from "@midwayjs/koa";
+import { InternalRequired } from "../../middleware/auth.middleware";
+import {
+  CancelOrderDTO,
+  CreateOrderDTO,
+  QueryOrderPageListDTO,
+} from "../../dto/order.dto";
+import { OrderService } from "../../service/order.service";
+import { MidwayLogger } from "@midwayjs/logger";
+import { ApplicationService } from "../../service/application.service";
+import { PayService } from "../../service/pay.service";
+import { CreatePayOrderDTO } from "../../dto/pay.dto";
 
-@Controller('/inter/order')
+@Controller("/inter/order", {
+  middleware: [InternalRequired],
+})
 export class OrderController {
   @Inject()
   ctx: Context;
@@ -21,28 +36,27 @@ export class OrderController {
 
   @Inject()
   payService: PayService;
-  
+
   @Inject()
-  logger: MidwayLogger
+  logger: MidwayLogger;
 
   /** 创建订单 */
-  @Post('/', {
-    description: '创建订单',
-    middleware: [
-      InternalRequired
-    ]
+  @Post("/", {
+    description: "创建订单",
   })
-    async create(@Body() params: CreateOrderDTO) {
+  async create(@Body() params: CreateOrderDTO) {
     const order = await this.orderService.create(params);
     return order;
   }
- 
-   /** 发起订单支付 */
+
+  /** 发起订单支付 */
   @Post("/:orderSn/pay", {
     description: "发起订单支付",
-    middleware: [InternalRequired],
   })
-  async createPayOrder(@Param("orderSn") orderSn: string, @Body() params: CreatePayOrderDTO) {
+  async createPayOrder(
+    @Param("orderSn") orderSn: string,
+    @Body() params: CreatePayOrderDTO
+  ) {
     // const order = await this.orderService.create(params);
     this.logger.debug("params: ", params);
     // const order = await this.orderService.create(params);
@@ -51,10 +65,7 @@ export class OrderController {
       throw new httpError.NotFoundError("订单不存在");
     }
 
-    const payOrder = await this.payService.findOrCreatePayOrder(
-      order,
-      params
-    );
+    const payOrder = await this.payService.findOrCreatePayOrder(order, params);
     if (payOrder.payment) {
       payOrder.payment.secured();
     }
@@ -64,7 +75,6 @@ export class OrderController {
   /** 获取订单详情 */
   @Get("/:orderSn", {
     description: "获取订单详情",
-    middleware: [InternalRequired],
   })
   async detail(@Param("orderSn") orderSn: string) {
     const order = await this.orderService.findBySn(orderSn);
@@ -80,7 +90,6 @@ export class OrderController {
   /** 获取订单分页列表 */
   @Get("/pageList", {
     description: "获取订单分页列表",
-    middleware: [InternalRequired],
   })
   async pageList(@Queries() params: QueryOrderPageListDTO) {
     const pageData = await this.orderService.pageList(params);
@@ -101,7 +110,6 @@ export class OrderController {
   /** 取消订单 */
   @Post("/:orderSn/cancel", {
     description: "取消订单",
-    middleware: [InternalRequired],
   })
   async cancel(
     @Param("orderSn") orderSn: string,
@@ -123,10 +131,9 @@ export class OrderController {
   /** 完成订单 */
   @Post("/:orderSn/complete", {
     description: "完成订单",
-    middleware: [InternalRequired],
   })
   async complete(
-    @Param("orderSn") orderSn: string,
+    @Param("orderSn") orderSn: string
     // @Body() params: CancelOrderDTO
   ) {
     const order = await this.orderService.findBySn(orderSn);
@@ -140,10 +147,9 @@ export class OrderController {
   /** 发货 */
   @Post("/:orderSn/ship", {
     description: "发货订单",
-    middleware: [InternalRequired],
   })
   async ship(
-    @Param("orderSn") orderSn: string,
+    @Param("orderSn") orderSn: string
     // @Body() params: CancelOrderDTO
   ) {
     const order = await this.orderService.findBySn(orderSn);

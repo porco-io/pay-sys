@@ -5,10 +5,10 @@ import { PayService } from '../../service/pay.service';
 import { AliService } from '../../service/ali.service';
 import { MidwayLogger } from '@midwayjs/logger';
 import { PayState } from '../../define/enums';
-import { LoginRequired } from '../../middleware/auth.middleware';
+import { InternalRequired } from '../../middleware/auth.middleware';
 
 @Controller('/inter/pay', {
-  middleware: [LoginRequired]
+  middleware: [InternalRequired]
 })
 export class PayController {
   @Inject()
