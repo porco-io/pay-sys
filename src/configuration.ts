@@ -78,7 +78,7 @@ export class MainConfiguration {
 
   async onReady(container: IMidwayContainer, mainApp?: IMidwayApplication) {
     initLogger({
-      level: EnvUtil.isProd ? logLevels.ALL.levelStr : logLevels.DEBUG.levelStr,
+      level: EnvUtil.isProd ? logLevels.ALL.levelStr : logLevels.INFO.levelStr,
       logDir: join(appRootPath.path, EnvUtil.isTest ? 'logs/test' : 'logs'),
     });
     await AdminUser.initAdminUser();
