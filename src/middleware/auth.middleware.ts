@@ -3,20 +3,25 @@ import { NextFunction, Context } from '@midwayjs/koa';
 import { models } from '../models/models';
 import { JwtService } from '@midwayjs/jwt';
 import {JwtKeyid } from '../define/enums';
+import { ApplicationService } from '../service/application.service';
 
 @Middleware()
 export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
   @Inject()
   jwtService: JwtService;
 
+  @Inject()
+  applicationService: ApplicationService;
+
+  @Inject()
   /** 白名单 */
   whiteList = ['/api/auth', '/status.ok'];
 
   resolve() {
     return async (ctx: Context, next: NextFunction) => {
-      if (ctx.headers['authorization']) {
-        const authorization = ctx.headers['authorization'];
-        if (!authorization) return;
+      const authorization = ctx.headers['authorization']?.toString();
+      const appKey = ctx.headers['x-app-id']?.toString();
+      if (authorization) {
         const parts = authorization.trim().split(' ');
         if (parts.length === 2) {
           const [scheme, token] = parts;
@@ -33,8 +38,15 @@ export class AuthMiddleware implements IMiddleware<Context, NextFunction> {
             }
           }
         }
+      } else if (appKey) {
+        const appSecret = ctx.headers['x-app-token']?.toString();
+        const app = await this.applicationService.findByKey(appKey);
+        if (app && appSecret) {
+          if (app.secret === appSecret) {
+            ctx.state.application = app;
+          }
+        }
       }
-
       return next();
     };
   }

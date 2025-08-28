@@ -36,7 +36,7 @@ import { AuthMiddleware } from './middleware/auth.middleware';
 import { initLogger, logLevels } from './utils/loggers';
 import { ConsulService } from './service/consul.service';
 import { RabbitmqService } from './service/rabbitmq';
-import AdminUser from './models/models/AdminUser';
+import { AdminUser } from './models/models/AdminUser.model';
 
 @Configuration({
   imports: [

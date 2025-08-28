@@ -1,11 +1,10 @@
 import { httpError, ILogger, Inject, Logger, Provide } from '@midwayjs/core';
 import { isNil, omitBy, uniq } from 'lodash';
-import { CreateApplicationDTO, QueryAppPageListDTO, UpdateApplicationDTO } from '../dto/application.dto';
-import Application, { applicationScope } from '../models/models/Application.model';
+import { UpdateApplicationDTO } from '../dto/application.dto';
+import Application from '../models/models/Application.model';
 import { PaymentService } from './payment.service';
 import Order, { orderScope } from '../models/models/Order.model';
 import { CreateOrderDTO, QueryOrderPageListDTO } from '../dto/order.dto';
-import luid from 'luid'
 import { OrderProcessType, OrderState } from '../define/enums';
 import { genSnowflakeId } from '../utils/cipher';
 import { PayService } from './pay.service';

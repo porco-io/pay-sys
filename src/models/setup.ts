@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import { UserStatus } from "../define/enums";
 import { generatePassword, genSalt } from "../utils/helper";
-import AdminUser from "./models/AdminUser";
+import { AdminUser } from "./models/AdminUser.model";
 
 export const initAdminUser = async (sequelize: Sequelize) => {
   if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD) {
