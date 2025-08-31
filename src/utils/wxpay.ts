@@ -248,6 +248,8 @@ export class WxPayUtil {
    * 通过本接口来生成支付链接参数code_url，然后将该参数值生成二维码图片展示给用户。用户在使用微信客户端扫描二维码后，可以直接跳转到微信支付页面完成支付操作。
    */
   async nativePrepay(params: {
+    /** 应用id */
+    appId: string, 
     /** 商品描述 */
     description: string;
     /** 支付单 */
@@ -265,6 +267,7 @@ export class WxPayUtil {
     const payCallback = `${process.env.APP_HOST}/v1/pay/wxCallback/${params.paySn}`;
     const prepayApi = "/v3/pay/transactions/native";
     const wxPayParams = {
+      appid: params.appId,
       mchid: this.config.MCH_ID,
       description: params.description ?? "",
       out_trade_no: params.orderSn,
@@ -483,7 +486,7 @@ export class WxPayUtil {
     const sign = new KJUR.crypto.Signature({
       alg: "SHA256withRSA",
     });
-    sign.init(this.config.MCH_KEY_PEM, this.config.MCH_ID);
+    sign.init(this.config.MCH_KEY_PEM.trim(), this.config.MCH_ID.trim());
     return hextob64(sign.signString(paramStr));
   }
 

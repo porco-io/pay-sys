@@ -31,6 +31,9 @@ export class OrderController {
     middleware: [LoginRequired],
   })
   async create(@Body() params: CreateOrderDTO) {
+    if (!params.appKey) {
+      throw new httpError.BadRequestError('应用Key不能为空');
+    }
     const order = await this.orderService.create(params);
     return order;
   }

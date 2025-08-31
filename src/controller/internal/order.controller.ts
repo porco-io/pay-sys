@@ -45,7 +45,10 @@ export class OrderController {
     description: "创建订单",
   })
   async create(@Body() params: CreateOrderDTO) {
-    const order = await this.orderService.create(params);
+    const order = await this.orderService.create({
+      ...params,
+      appKey: this.ctx.state.application.key,
+    });
     return order;
   }
 

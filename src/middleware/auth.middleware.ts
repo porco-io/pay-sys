@@ -104,7 +104,7 @@ export class InternalRequired implements IMiddleware<Context, NextFunction> {
   resolve() {
     return async (ctx: Context, next: NextFunction) => {
       if (!ctx.state.application) {
-        throw new httpError.UnauthorizedError('仅允许内部调用');
+        throw new httpError.UnauthorizedError('鉴权失败');
       }
       return next();
     };

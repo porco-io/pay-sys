@@ -1,14 +1,7 @@
 import { httpError, ILogger, Logger, Provide } from "@midwayjs/core";
-import { addStorage, StorageKeys } from "../utils/storage";
-import { getWxAccessToken, getWxPaySign, WxPayUtil } from "../utils/wxpay";
-import { apis } from "../api/apis";
+import { WxPayUtil } from "../utils/wxpay";
 import moment from "moment";
-import { models } from "../models/models";
 import PayOrder from "../models/models/PayOrder.model";
-import { nanoRandom } from "../utils/cipher";
-import { AxiosRequestConfig } from "axios";
-import { Caching } from "@midwayjs/cache-manager";
-import Payment from "../models/models/Payment.model";
 import { PaymentType } from "../define/enums";
 import { WxPayParamsDTO } from "../dto/pay.dto";
 
@@ -62,7 +55,13 @@ export class WxService {
       //     }
       //   });
       case PaymentType.native:
-        return wxPayUtil.nativePrepay(prepayOptions);
+        if (!payParams.appId) {
+          throw new httpError.BadRequestError("微信支付参数错误, 缺少appId");
+        }
+        return wxPayUtil.nativePrepay({
+          ...prepayOptions,
+          appId: payParams.appId, 
+        });
       default:
         throw new httpError.ForbiddenError(
           `微信支付类型(${payParams.payType})不支持`

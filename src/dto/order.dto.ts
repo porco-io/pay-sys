@@ -5,7 +5,7 @@ import { OrderProcessType, OrderState } from "../define/enums";
 
 export class CreateOrderDTO {
   @ApiProperty({ description: "应用Key" })
-  @Rule(KeyRule.required())
+  @Rule(KeyRule)
   appKey: string;
 
   @ApiProperty({ description: "购买用户特征ID" })
