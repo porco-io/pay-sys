@@ -267,8 +267,8 @@ export class WxPayUtil {
     const payCallback = `${process.env.APP_HOST}/v1/pay/wxCallback/${params.paySn}`;
     const prepayApi = "/v3/pay/transactions/native";
     const wxPayParams = {
-      appid: params.appId,
-      mchid: this.config.MCH_ID,
+      appid: params.appId.trim(),
+      mchid: this.config.MCH_ID.trim(),
       description: params.description ?? "",
       out_trade_no: params.orderSn,
       /* 交易结束时间 */
