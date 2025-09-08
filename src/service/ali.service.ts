@@ -8,7 +8,7 @@ export class AliService {
 
   /** 获取支付宝支付前端调起所需数据 */
   async getAliPayParams(payOrder: PayOrder) {
-    const payCallback = `${process.env.SERVER_HOST}/pay/alipayCallback/${payOrder.paySn}`;
+    const payCallback = `${process.env.SERVER_HOST}/api/pay/alipayCallback/${payOrder.paySn}`;
     
     const alipayConfig = {
       appId: '2021005155667848',
