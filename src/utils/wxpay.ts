@@ -265,7 +265,7 @@ export class WxPayUtil {
     payAmount: number;
   }) {
     /** 支付回调地址 */
-    const payCallback = `${process.env.APP_HOST}/v1/pay/wxCallback/${params.paySn}`;
+    const payCallback = `${process.env.SERVER_HOST}/api/pay/wxCallback/${params.paySn}`;
     const prepayApi = "/v3/pay/transactions/native";
     const wxPayParams = {
       appid: params.appId.trim(),
@@ -327,7 +327,7 @@ export class WxPayUtil {
     };
   }) {
     /** 支付回调地址 */
-    const payCallback = `${process.env.APP_HOST}/v1/pay/wxCallback/${params.paySn}`;
+    const payCallback = `${process.env.SERVER_HOST}/v1/pay/wxCallback/${params.paySn}`;
     const prepayApi = "/v3/pay/transactions/h5";
     const wxPayParams = {
       mchid: this.config.MCH_ID,
