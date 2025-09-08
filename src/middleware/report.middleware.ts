@@ -14,7 +14,7 @@ export class ReportMiddleware implements IMiddleware<Context, NextFunction> {
       const headerInfo = pick(ctx.headers, ['authorization', 'user-agent']);
       const result = await next();
 
-      ctx.logger.info(
+      console.info(
         `[${this.getStatusCode(ctx.status)}] ${
           Date.now() - startTime
         }ms - query: ${JSON.stringify(

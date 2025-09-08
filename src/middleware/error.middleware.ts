@@ -13,7 +13,7 @@ export class ErrorMiddleware implements IMiddleware<Context, NextFunction> {
         if (err.stack) {
           err.stack = err.stack.split('\n').filter((line: string) => !line.match(/\.js(:[0-9]+)\b/)).join('\n');
         }
-        ctx.logger.error(err);
+        console.error(err);
         ctx.status = err.status || 500;
         if (ctx.status === 500) {
           return 'Server Internal Error'
