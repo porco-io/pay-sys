@@ -64,7 +64,7 @@ export function initLogger({
         level: log4js.levels.ALL.levelStr,
       },
     },
-    pm2: true
+    pm2: false
   });
 
   loggers = Object.values(LOGGER_TYPES) 
