@@ -206,6 +206,7 @@ export class WxPayUtil {
   }) {
     /** 支付回调地址 */
     const payCallback = `${process.env.SERVER_HOST}/api/pay/wxCallback/${params.paySn}`;
+    console.log('wx:pay_notify', payCallback);
     const prepayApi = "/v3/pay/transactions/app";
     const wxPayParams = {
       mchid: this.config.MCH_ID,
@@ -384,6 +385,7 @@ export class WxPayUtil {
   }) {
     /** 支付回调地址 */
     const payCallback = `${process.env.SERVER_HOST}/api/pay/wxCallback/${params.paySn}`;
+    console.log('wx:pay_notify', payCallback);
     const prepayApi = "/v3/pay/transactions/jsapi";
     const wxPayParams = {
       mchid: this.config.MCH_ID,
