@@ -112,7 +112,7 @@ export class PayController {
   }
 
   // 支付宝支付回调
-  @Post("/:paySn/state", {
+  @Get("/:paySn/state", {
     description: "获取支付单状态",
     middleware: [InternalRequired],
   })
