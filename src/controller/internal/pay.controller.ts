@@ -17,6 +17,7 @@ import { AliService } from "../../service/ali.service";
 import { MidwayLogger } from "@midwayjs/logger";
 import { PayState } from "../../define/enums";
 import { InternalRequired } from "../../middleware/auth.middleware";
+import { pick } from "lodash";
 
 @Controller("/inter/pay", {})
 export class PayController {
@@ -108,5 +109,24 @@ export class PayController {
   ) {
     console.log("params: ", params);
     return true;
+  }
+
+  // 支付宝支付回调
+  @Post("/:paySn/state", {
+    description: "获取支付单状态",
+    middleware: [InternalRequired],
+  })
+  async getPayState(@Param("paySn") paySn: string) {
+    const payOrder = await this.payService.findByPaySn(paySn);
+    if (!payOrder) {
+      throw new httpError.BadRequestError("支付单不存在");
+    }
+    return pick(payOrder, [
+      "orderSn",
+      "paySn",
+      "state",
+      "createdAt",
+      "updatedAt",
+    ]);
   }
 }
